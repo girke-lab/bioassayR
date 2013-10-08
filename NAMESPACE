@@ -1,0 +1,35 @@
+## IMPORTS
+import(DBI, RSQLite)
+importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
+
+## EXPORTS
+## S4 Classes
+exportClasses(
+    "BioAssaySet",
+    "bioassay"
+)
+
+## Methods
+exportMethods(
+	"queryBioassayDB", "show",
+    "aid", "source_id", "assay_type", "organism", "scoring", "targets", "target_types", "scores",
+    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-"
+)
+
+## Functions
+export(
+	"connectBioassayDB", 
+	"addDataSource", 
+	"loadBioassay", 
+	"dropBioassay", 
+	"disconnectBioassayDB", 
+    "newBioassayDB",
+    "addBioassayIndex",
+    "dropBioassayIndex",
+    "activeTargets", 
+    "activeAgainst",
+    "selectiveAgainst",
+    "getAssay",
+    "parsePubChemBioassay",
+    "activityMatrix"
+)
