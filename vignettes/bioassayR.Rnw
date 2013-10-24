@@ -9,12 +9,12 @@
 
 \documentclass{article}
 <<style, echo=FALSE, results=tex>>=
-BiocStyle::latex()
+BiocStyle::latex(bibstyle="plainnat")
 @
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage[authoryear,round]{natbib}
 \usepackage{graphicx}
-% \bibliographystyle{plainnat}
 \def\bibsection{\section{References}}
 	
 \usepackage{graphicx}
@@ -33,7 +33,6 @@ BiocStyle::latex()
 \lhead{\textit{bioassayR Manual}}
 \rfoot{\thepage}
 
-\bibliographystyle{plainnat}
 
 \begin{document}
 \title{bioassayR: small molecule bioactivity analysis}
