@@ -10,13 +10,13 @@ connectBioassayDB <- function (databasePath, writeable = F) {
     } else {
         con <- sqliteNewConnection(drv, dbname=databasePath, flags=SQLITE_RO)
     }
-    new("BioAssaySet", database = con)
+    new("BioassayDB", database = con)
 }
 
 # disconnects a bioassay database
 disconnectBioassayDB <- function (database) {
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
 
     dbDisconnect(slot(database, "database"))
     invisible()
@@ -35,7 +35,7 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
     drv <- dbDriver("SQLite")
     con <- dbConnect(drv, dbname=databasePath)
     dbGetQuery(con, paste("CREATE TABLE activity",
-        "(aid INTEGER, cid INTEGER, sid INTEGER,",
+        "(aid INTEGER, cid INTEGER,",
         "activity INTEGER, score INTEGER)"))
     dbGetQuery(con, paste("CREATE TABLE assays",
         "(source_id INTEGER, aid INTEGER,",
@@ -61,8 +61,8 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
 
 # adds a new data source
 addDataSource <- function(database, description, version){
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
     if(! .writeable(database)){
         stop("database opened in read only mode")
     } 
@@ -119,14 +119,14 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile){
 
     aid <- as.character(aid)
     # parse csv
-    tempAssay <- read.csv(csvFile)[,c("PUBCHEM_CID", "PUBCHEM_SID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+    tempAssay <- read.csv(csvFile)[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
     outcomes <- rep(NA, nrow(tempAssay))
     outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
     outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
     outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Inactive"] <- 0
     outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
     tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
-    colnames(tempAssay) <- c("cid", "sid", "activity", "score")
+    colnames(tempAssay) <- c("cid", "activity", "score")
 
     # parse xmlFile
     xmlPointer <- xmlTreeParse(xmlFile, useInternalNodes=TRUE, addFinalizer=TRUE)
@@ -159,19 +159,19 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile){
     new("bioassay",
         aid=aid,
         source_id="PubChem Bioassay",
-        assay_type=type,
-        organism=organism,
-        scoring=scoring,
-        targets = targets,
-        target_types = targetTypes,
+        assay_type=as.character(type),
+        organism=as.character(organism),
+        scoring=as.character(scoring),
+        targets = as.character(targets),
+        target_types = as.character(targetTypes),
         scores=tempAssay
     ) 
 }
 
 # delete an assay
 dropBioassay <- function(database, aid){
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
     if(! .writeable(database)){
         stop("database opened in read only mode")
     } 
@@ -199,8 +199,8 @@ dropBioassay <- function(database, aid){
 
 # adds a new assay
 loadBioassay <- function(database, bioassay){
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
     if(class(bioassay) != "bioassay")
         stop("input not of class bioassay")
     if(! .writeable(database)){
@@ -255,9 +255,9 @@ loadBioassay <- function(database, bioassay){
         stop("database opened in read only mode")
     } 
     dataTable <- as.data.frame(dataTable)
-    colnames(dataTable) <- c("CID", "SID", "ACTIVITY", "SCORE")
+    colnames(dataTable) <- c("CID", "ACTIVITY", "SCORE")
     con <- slot(database, "database")
-    sql <- paste("INSERT INTO activity VALUES ('", aid, "', $CID, $SID, $ACTIVITY, $SCORE)", sep="")
+    sql <- paste("INSERT INTO activity VALUES ('", aid, "', $CID, $ACTIVITY, $SCORE)", sep="")
     dbBeginTransaction(con)
     dbGetPreparedQuery(con, sql, bind.data = dataTable)
     dbCommit(con)
@@ -266,8 +266,8 @@ loadBioassay <- function(database, bioassay){
 
 # creates database indicies 
 addBioassayIndex <- function(database){
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
     if(! .writeable(database)){
         stop("database opened in read only mode")
     } 
@@ -281,8 +281,8 @@ addBioassayIndex <- function(database){
 
 # drops database indicies
 dropBioassayIndex <- function(database){
-    if(class(database) != "BioAssaySet")
-        stop("database not of class BioAssaySet")
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
     if(! .writeable(database)){
         stop("database opened in read only mode")
     } 

@@ -11,7 +11,7 @@ addBioassayIndex(database)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to be indexed.
+A \code{BioassayDB} database to be indexed.
 }
 }
 \author{

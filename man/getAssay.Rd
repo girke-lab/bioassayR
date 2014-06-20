@@ -11,7 +11,7 @@ getAssay(database, aid)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to query.
+A \code{BioassayDB} database to query.
 }
   \item{aid}{
 The assay identifier string (aid), matching an aid for an assay loaded into the database.

@@ -1,5 +1,5 @@
 setMethod("show", signature=signature(
-    object="BioAssaySet"),
+    object="BioassayDB"),
     function(object) {
         cat("class:\t\t", class(object), "\n")
         cat("assays:\t\t", queryBioassayDB(object, "SELECT COUNT(*) FROM assays")[[1]], "\n")
@@ -13,7 +13,7 @@ setMethod("show", signature=signature(
     }
 )
 
-setMethod("queryBioassayDB", signature(object="BioAssaySet"),
+setMethod("queryBioassayDB", signature(object="BioassayDB"),
     function(object, query) {
         # input tests:
         if(! is.character(query))

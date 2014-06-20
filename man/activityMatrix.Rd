@@ -11,7 +11,7 @@ activityMatrix(database, maxAssayLimit = 100)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to query.
+A \code{BioassayDB} database to query.
 }
   \item{maxAssayLimit}{
 A numeric value showing the maximum number of assays that can be present in the database 

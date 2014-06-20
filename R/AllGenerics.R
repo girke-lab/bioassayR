@@ -1,4 +1,4 @@
-## generics for BioAssaySet
+## generics for BioassayDB
 
 setGeneric("queryBioassayDB", function(object, query){
     standardGeneric("queryBioassayDB")

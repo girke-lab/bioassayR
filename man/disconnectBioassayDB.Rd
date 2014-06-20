@@ -1,17 +1,17 @@
 \name{disconnectBioassayDB}
 \alias{disconnectBioassayDB}
 \title{
-Disconnect the database file from a \code{BioAssaySet} object
+Disconnect the database file from a \code{BioassayDB} object
 }
 \description{
-This function disconnects the underlying sqlite database from a \code{BioAssaySet} object. This is a critical step for writeable databases, but can be omitted for read only databases.
+This function disconnects the underlying sqlite database from a \code{BioassayDB} object. This is a critical step for writeable databases, but can be omitted for read only databases.
 }
 \usage{
 disconnectBioassayDB(database)
 }
 \arguments{
   \item{database}{
-A code{BioAssaySet} object to be disconnected.
+A code{BioassayDB} object to be disconnected.
 }
 }
 \author{

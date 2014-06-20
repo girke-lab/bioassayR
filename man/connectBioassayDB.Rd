@@ -1,11 +1,11 @@
 \name{connectBioassayDB}
 \alias{connectBioassayDB}
 \title{
-Create a \code{BioAssaySet} object connected to the specified
+Create a \code{BioassayDB} object connected to the specified
 database file
 }
 \description{
-This function returns a \code{BioAssaySet} object for working with a pre-existing bioassayR database, already located on the users filesystem.
+This function returns a \code{BioassayDB} object for working with a pre-existing bioassayR database, already located on the users filesystem.
 Users can download pre-built databases for use with this feature from \url{http://chemmine.ucr.edu/bioassayr}
 }
 \usage{
@@ -20,7 +20,7 @@ logical. Should the database allow data to be modified and written to?
 }
 }
 \value{
-\item{BioAssaySet}{ for details see ?"BioAssaySet-class"}
+\item{BioassayDB}{ for details see ?"BioassayDB-class"}
 }
 \author{
 Tyler Backman

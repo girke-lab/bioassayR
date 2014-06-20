@@ -11,7 +11,7 @@ addDataSource(database, description, version)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to add a new data source to.
+A \code{BioassayDB} database to add a new data source to.
 }
   \item{description}{
 A string containing a name or description of the new data source. This exact value will be used as a key for querying and loading data from this source.
