@@ -11,7 +11,7 @@ loadBioassay(database, bioassay)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to load the data into.
+A \code{BioassayDB} database to load the data into.
 }
   \item{bioassay}{
 A \code{bioassay} object containing the data to load.

@@ -11,7 +11,7 @@ activeTargets(database, cid)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to query.
+A \code{BioassayDB} database to query.
 }
   \item{cid}{
 A string or integer containing a cid referring to a small molecule.

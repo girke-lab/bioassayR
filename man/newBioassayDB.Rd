@@ -4,7 +4,7 @@
 Create a new bioassayR database
 }
 \description{
-This function creates a new bioassayR database at the specified filesystem location, and returns a \code{BioAssaySet} object connected to the new database.
+This function creates a new bioassayR database at the specified filesystem location, and returns a \code{BioassayDB} object connected to the new database.
 }
 \usage{
 newBioassayDB(databasePath, writeable = T, indexed = F)

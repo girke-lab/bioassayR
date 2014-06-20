@@ -12,7 +12,7 @@ dropBioassayIndex(database)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to have the index removed.
+A \code{BioassayDB} database to have the index removed.
 }
 }
 \author{

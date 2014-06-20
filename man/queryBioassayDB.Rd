@@ -11,7 +11,7 @@ queryBioassayDB(object, query)
 }
 \arguments{
   \item{object}{
-A \code{BioAssaySet} object referring to a bioassayR database.
+A \code{BioassayDB} object referring to a bioassayR database.
 }
   \item{query}{
 A string containing a valid SQLite query (see SQLite documentation for more details).

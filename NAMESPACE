@@ -1,12 +1,13 @@
 ## IMPORTS
-import(DBI, RSQLite)
+import(DBI, RSQLite, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
 
 ## EXPORTS
 ## S4 Classes
 exportClasses(
-    "BioAssaySet",
-    "bioassay"
+    "BioassayDB",
+    "bioassay",
+    "bioassaySet"
 )
 
 ## Methods
@@ -30,6 +31,9 @@ export(
     "activeAgainst",
     "selectiveAgainst",
     "getAssay",
+    "getAssays",
     "parsePubChemBioassay",
-    "activityMatrix"
+    "activityMatrix",
+    "getBioassaySetByCids",
+    "perTargetMatrix"
 )

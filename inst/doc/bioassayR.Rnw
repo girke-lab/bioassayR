@@ -9,7 +9,7 @@
 
 \documentclass{article}
 <<style, echo=FALSE, results=tex>>=
-BiocStyle::latex(use.unsrturl=FALSE)
+BiocStyle::latex()
 @
 \usepackage{hyperref}
 \usepackage{url}
@@ -391,7 +391,7 @@ library(ChemmineR)
 structures <- getIds(as.numeric(row.names(selectiveCompounds)))
 @
 
-\noindent Here we visualize just the first four compounds found with \Rfunction{selectiveAgainst}. Consult the vignette supplied with the \Rpackage{ChemmineR} package for numerous powerful examples of visualizing and analyzing these structures further.
+\noindent Here we visualize just the first four compounds found with \Rfunction{selectiveAgainst}. Consult the vignette supplied with the \Rpackage{ChemmineR} for numerous powerful examples of visualizing and analyzing these structures further.
 <<plotstruct, eval=TRUE, fig=TRUE, keep.source=TRUE>>=
 plot(structures[1:4], print=FALSE) # Plots structures to R graphics device
 @

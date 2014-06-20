@@ -1,4 +1,4 @@
-setClass("BioAssaySet", representation=representation(database="SQLiteConnection"))
+setClass("BioassayDB", representation=representation(database="SQLiteConnection"))
 
 setClass("bioassay", representation=representation(
     aid = "character",
@@ -9,4 +9,17 @@ setClass("bioassay", representation=representation(
     targets = "character",
     target_types = "character",
     scores = "data.frame"
+))
+
+setClass("bioassaySet", representation=representation(
+    activity = "dgCMatrix",
+    scores = "dgCMatrix",
+    targets = "dgCMatrix",
+    sources = "data.frame",
+    replicates = "factor",
+    source_id = "integer",
+    assay_type = "character",
+    organism = "character",
+    scoring = "character",
+    target_types = "character"
 ))

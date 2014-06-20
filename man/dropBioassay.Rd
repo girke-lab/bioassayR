@@ -11,7 +11,7 @@ dropBioassay(database, aid)
 }
 \arguments{
   \item{database}{
-    A \code{BioAssaySet} database to remove an assay from.
+    A \code{BioassayDB} database to remove an assay from.
 }
   \item{aid}{
     The assay identifier string (aid), matching an aid for an assay loaded into the database.

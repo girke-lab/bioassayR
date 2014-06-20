@@ -11,7 +11,7 @@ activeAgainst(database, target)
 }
 \arguments{
   \item{database}{
-A \code{BioAssaySet} database to query.
+A \code{BioassayDB} database to query.
 }
   \item{target}{
 A string or integer containing a target_id referring to a target of interest.
