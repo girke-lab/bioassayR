@@ -13,7 +13,7 @@ BiocStyle::latex()
 @
 \usepackage{hyperref}
 \usepackage{url}
-\usepackage[authoryear,round]{natbib}
+% \usepackage[authoryear,round]{natbib}
 \usepackage{graphicx}
 % \bibliographystyle{plainnat}
 \def\bibsection{\section{References}}
@@ -34,7 +34,7 @@ BiocStyle::latex()
 \lhead{\textit{bioassayR Manual}}
 \rfoot{\thepage}
 
-\bibliographystyle{plainnat}
+% \bibliographystyle{plainnat}
 
 \begin{document}
 \title{bioassayR: small molecule bioactivity analysis}
@@ -47,7 +47,7 @@ BiocStyle::latex()
 \Rpackage{bioassayR} is a flexible computational tool for statistical analysis of biological screening data. It allows users to store, organize, and
 systematically analyze data from a large number of small molecule bioactivity experiments. 
 Users have the option of supplying their own bioactivity
-data for analysis, or downloading a database from the authors website (\url{http://chemmine.ucr.edu/bioassayr}) pre-loaded with bioactivity data sourced from NCBI PubChem Bioassay\citep{Backman2011a, Wang:2012hj}.
+data for analysis, or downloading a database from the authors website (\url{http://chemmine.ucr.edu/bioassayr}) pre-loaded with bioactivity data sourced from NCBI PubChem Bioassay\cite{Backman2011a, Wang:2012hj}.
 The pre-loaded database contains the results of hundreds of thousands of bioassay experiments, where small molecules were screened against a defined biological target.
 \Rpackage{bioassayR} allows users to powerfully leverage these data as a reference to 
 identify small molecules active against a protein or organism of interest, identify target selective compounds that may be useful as drugs or chemical genomics probes, and identify and compare the activity profiles of small molecules.
@@ -185,7 +185,7 @@ unlink(myDatabaseFilename)
 @
 
 \section{Loading User Supplied Data}
-This section demonstrates the process for creating a new bioactivity database from user supplied data. As an example, we will demonstrate the process of downloading an assay from the NCBI PubChem Bioassay bioactivity data repository, and loading this into a new database\citep{Wang:2012hj}.
+This section demonstrates the process for creating a new bioactivity database from user supplied data. As an example, we will demonstrate the process of downloading an assay from the NCBI PubChem Bioassay bioactivity data repository, and loading this into a new database\cite{Wang:2012hj}.
 
 First, get two files from Pubchem Bioassay for the assay of interest: an XML file containing details on how the experiment was performed, and a CSV (comma separated value) file which contains the actual activity scores. For the purposes of this example, we will use the data from assay 1000, which is a confirmatory assay (titration assay) of 57 small molecules against a mevalonate kinase protein. More details on this assay were provided in the  ``Quick Tutorial,'' where the same data is used. These files can be downloaded from PubChem Bioassay at \url{http://pubchem.ncbi.nlm.nih.gov/} or loaded from the example data repository included in this package as follows:
 
@@ -300,7 +300,7 @@ disconnectBioassayDB(sampleDB)
 
 A pre-built database containing large quantities of public domain bioactivity data sourced from the PubChem Bioassay database, can be downloaded from \url{http://chemmine.ucr.edu/bioassayr}. 
 While downloading the full database is recommended, it is possible to run this example using a small subset of the database, included within the \Rpackage{bioassayR} package for testing purposes.
-This example demonstrates the utility of \Rpackage{bioassayR} for identifying the bioactivity patterns of a small drug-like molecule. In this example, we look at the binding activity patterns for the drug acetylsalicylic acid (aka Aspirin) and compare these binding data to annotated targets in the DrugBank.ca drug database\citep{Wishart:2008bb}.
+This example demonstrates the utility of \Rpackage{bioassayR} for identifying the bioactivity patterns of a small drug-like molecule. In this example, we look at the binding activity patterns for the drug acetylsalicylic acid (aka Aspirin) and compare these binding data to annotated targets in the DrugBank.ca drug database\cite{Wishart:2008bb}.
 
 The DrugBank database is a valuable resource containing numerous data on drug activity in humans, including known molecular targets. In this exercise, first take a look at the
 annotated molecular targets for acetylsalicylic acid by searching this name on \url{http://drugbank.ca}. This will provide a point of reference for comparing to the bioactivity
@@ -326,7 +326,7 @@ drugTargets <- activeTargets(pubChemDatabase, "2244")
 drugTargets
 @
 
-Next, we will use the \Rpackage{ape} software library to get the protein sequences for these active targets, and to determine which species they may be from\citep{Paradis2004}.
+Next, we will use the \Rpackage{ape} software library to get the protein sequences for these active targets, and to determine which species they may be from\cite{Paradis2004}.
 For more details on working with these sequences, consult the \Rpackage{ape} documentation.
 
 <<eval=TRUE, keep.source=TRUE>>=
@@ -383,7 +383,7 @@ In the example database these compounds are only showing one tested target becau
 
 Users can combine \Rpackage{bioassayR} with the \Rpackage{ChemmineR} library to obtain structural information on these target selective compounds, and then perform further analysis- such as structural clustering, visualization, and computing physicochemical properties. 
 
-The \Rpackage{ChemmineR} software library can be used to download structural data for any of these compounds, and to visualize these structures as follows\citep{Cao2008c}.
+The \Rpackage{ChemmineR} software library can be used to download structural data for any of these compounds, and to visualize these structures as follows\cite{Cao2008c}.
 This example requires an active internet connection, as the compound structures are obtained from a remote server.
 
 <<eval=TRUE, keep.source=TRUE>>=
