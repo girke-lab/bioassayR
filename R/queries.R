@@ -115,7 +115,7 @@ perTargetMatrix <- function(assays){
         stop("database not of class bioassaySet")
 
     # Get coordinates of active scores
-    activityMatrix <- slot(bioassaySetByCids, "activity")
+    activityMatrix <- slot(assays, "activity")
     activeCoords <- which(activityMatrix == 2, arr.ind=TRUE)
     
     # get assay to target mappings 
