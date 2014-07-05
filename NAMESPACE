@@ -1,5 +1,5 @@
 ## IMPORTS
-import(DBI, RSQLite, Matrix, rjson)
+import(DBI, RSQLite, methods, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
 
 ## EXPORTS
