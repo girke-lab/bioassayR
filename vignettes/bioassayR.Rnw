@@ -1,0 +1,467 @@
+% Sweave("bioassayR.Rnw"); system("pdflatex bioassayR.tex; bibtex bioassayR; pdflatex bioassayR.tex; pdflatex bioassayR.tex")
+% echo 'Sweave("bioassayR.Rnw")' | R --slave; echo 'Stangle("bioassayR.Rnw")' | R --slave; pdflatex bioassayR.tex;  bibtex bioassayR; pdflatex bioassayR.tex
+% NOTE -- ONLY EDIT THE .Rnw FILE!!!  The .tex file is
+% likely to be overwritten.
+% \VignetteIndexEntry{bioassayR Tutorial}
+% \VignetteDepends{}
+% \VignetteKeywords{}
+% \VignettePackage{gpls}
+
+\documentclass{article}
+<<style, echo=FALSE, results=tex>>=
+BiocStyle::latex()
+@
+\usepackage{hyperref}
+\usepackage{url}
+% \usepackage[authoryear,round]{natbib}
+\usepackage{graphicx}
+% \bibliographystyle{plainnat}
+\def\bibsection{\section{References}}
+	
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{url}
+
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+	
+% Define header and footer area with fandyhdr package (see: http://www.ctan.org/tex-archive/macros/latex/contrib/fancyhdr/fancyhdr.pdf)
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\rhead{\nouppercase{\leftmark}}
+\lhead{\textit{bioassayR Manual}}
+\rfoot{\thepage}
+
+% \bibliographystyle{plainnat}
+
+\begin{document}
+\title{bioassayR: small molecule bioactivity analysis}
+\author{Tyler Backman, Thomas Girke \\
+ Email contact: thomas.girke@ucr.edu}
+\maketitle
+
+\section{Introduction}
+
+\Rpackage{bioassayR} is a flexible computational tool for statistical analysis of biological screening data. It allows users to store, organize, and
+systematically analyze data from a large number of small molecule bioactivity experiments. 
+Users have the option of supplying their own bioactivity
+data for analysis, or downloading a database from the authors website (\url{http://chemmine.ucr.edu/bioassayr}) pre-loaded with bioactivity data sourced from NCBI PubChem Bioassay\cite{Backman2011a, Wang:2012hj}.
+The pre-loaded database contains the results of hundreds of thousands of bioassay experiments, where small molecules were screened against a defined biological target.
+\Rpackage{bioassayR} allows users to powerfully leverage these data as a reference to 
+identify small molecules active against a protein or organism of interest, identify target selective compounds that may be useful as drugs or chemical genomics probes, and identify and compare the activity profiles of small molecules.
+
+\tableofcontents
+
+\section{\textcolor{red}{Recently Added Features}}
+
+\begin{itemize}
+    \item initial package release
+\end{itemize}
+
+\section{Getting Started}
+
+\subsection{Installation}
+The R software for running bioassayR can be downloaded from CRAN (\url{http://cran.at.r-project.org/}). The \Rpackage{bioassayR} package can be installed from R using the \Rfunction{bioLite} install command. 
+<<eval=FALSE>>=
+source("http://bioconductor.org/biocLite.R") # Sources the biocLite.R installation script.
+biocLite("bioassayR") # Installs the package.
+@
+
+\subsection{Loading the Package and Documentation}
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR) # Loads the package
+@
+<<eval=FALSE, keep.source=TRUE>>=
+library(help="bioassayR") # Lists all functions and classes 
+vignette("bioassayR") # Opens this PDF manual from R
+@
+
+\subsection{Quick Tutorial}
+This example walks you through creating a new empty database, adding example small molecule bioactivity data, and performing queries on these data.
+
+This example includes real experimental data from an antibiotics discovery experiment. These data are a ``confirmatory bioassay'' where 57 small molecules were screened against the mevalonate kinase protein from the {\it Streptococcus pneumonia} (SP) bacteria. Mevalonate kinase inhibitors are one possible class of antibiotic drugs that may be effective against this infamous bacteria.
+These data were published as assay identifier (aid) 1000 in the NCBI PubChem Bioassay database, by Dr. Thomas S. Leyh.
+
+First, create a new database. For purposes of this manual a tempfile is used, but you can replace the \Rfunction{tempfile} function call with a filename of your choice if you wish to save the resulting database for later.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR)
+library(RSQLite)
+myDatabaseFilename <- tempfile() 
+mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
+@
+
+\noindent Next, specify the source and version of the data you plan to load. This is a required step, which makes it easier to track the origin of your data later. Feel free to use the current date for a version number, if your data isn't versioned.
+
+<<eval=TRUE, keep.source=TRUE>>=
+addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+@
+
+After adding a data source, create or import a \Rclass{data.frame} which contains the activity scores for each of the molecules in your assay. 
+This \Rclass{data.frame} must contain four columns which includes a cid (unique compound identifer) for each compound, an sid (often used to distinguish distinct samples of the same compound structure), a binary activity score ($1=active$, $0=inactive$), and a numeric activity score.
+Consult the \Rclass{bioassay} man page for more details on formatting this \Rclass{data.frame}. The \Rpackage{bioassayR} package contains an example activity score data frame that can be accessed as follows:
+<<eval=TRUE, keep.source=TRUE>>=
+data(samplebioassay)
+samplebioassay[1:10,] # print the first 10 scores
+@
+
+All bioactivity data is loaded into the database, or retrieved from the database as an \Rclass{bioassay} object which contains details on the assay experimental design, molecular targets, and the activity scores. A bioassay object which incorporates activity scores can be created as follows.
+The source id value must exactly match that loaded earlier by \Rfunction{addDataSource}. The molecular target(s) for the assay are optional, and an unlimited number can be specified for a single assay as a vector passed to the targets option. The target types field should be a vector of equal length, describing the type of each target in the same order.
+
+<<eval=TRUE, keep.source=TRUE>>=
+myAssay <- new("bioassay",aid="1000", source_id="PubChem Bioassay",
+    assay_type="confirmatory", organism="unknown", scoring="activity rank", 
+    targets="116516899", target_types="protein", scores=samplebioassay)
+myAssay
+@
+
+\noindent The \Robject{bioassay} object can be loaded into the database with the \Rfunction{loadBioassay} function. By repeating this step with different data, a large number of distinct assays can be loaded into the database.
+
+
+<<eval=TRUE, keep.source=TRUE>>=
+loadBioassay(mydb, myAssay)
+@
+
+Wait a minute! We accidentally labeled that assay as organism ``unknown'' when we know that it's actually a screen against a protein from {\it Streptococcus pneumonia}. 
+After loading an assay into the database, you can later retrieve these data with the \Rfunction{getAssay} function. By combining this with the ability to delete an assay (the \Rfunction{dropBioassay} function) one can edit the database by (1) pulling an assay out, (2) deleting it from the database, (3) modifying the pulled out object, and (4) reloading the assay. For example, we can update the species annotation for our assay as follows:
+
+<<eval=TRUE, keep.source=TRUE>>=
+tempAssay <- getAssay(mydb, "1000") # get assay from database
+dropBioassay(mydb, "1000") # delete assay from database
+organism(tempAssay) <- "Streptococcus pneumonia" # update organism
+loadBioassay(mydb, tempAssay)
+@
+
+\noindent It is recommended to index your database after loading all of your data. This significantly speeds up access to the database, but can also slow down loading of data if indexing is performed before loading.
+
+<<eval=TRUE, keep.source=TRUE>>=
+addBioassayIndex(mydb)
+@
+
+\noindent After indexing, you can query the database. Here are some example queries. First view the database summary provided by \Rpackage{bioassayR}:
+
+<<eval=TRUE, keep.source=TRUE>>=
+mydb
+@
+
+\noindent Next, you can query the database for active targets for a given compound by cid. In this case, since only one assay has been loaded only a single target can be found. Experiment with loading more assays for a more interesting result!
+
+<<eval=TRUE, keep.source=TRUE>>=
+activeTargets(mydb, 16749979)
+@
+
+\noindent While many pre-built queries are provided (see other examples and man pages) 
+advanced users can also build their own SQL queries. First you will want to see the structure
+of the database as follows:
+
+<<eval=TRUE, keep.source=TRUE>>=
+queryBioassayDB(mydb, "SELECT * FROM sqlite_master WHERE type='table'")
+@
+
+\noindent As this is a sqlite database, you can consult \url{http://www.sqlite.org} for specifics on building SQL queries. For example, you can find all assays a given compound has participated in as follows:
+
+<<eval=TRUE, keep.source=TRUE>>=
+queryBioassayDB(mydb, "SELECT DISTINCT(aid) FROM activity WHERE cid = '16749979'")
+@
+
+\noindent This example prints the first 10 activity scores from a specified assay:
+
+<<eval=TRUE, keep.source=TRUE>>=
+queryBioassayDB(mydb, "SELECT * FROM activity WHERE aid = '1000' LIMIT 10")
+@
+
+Lastly, disconnecting from the database after analysis reduces the chances of data corruption. If you are using a pre-built database in read only mode (as demonstrated in the Prebuilt Database Example section) you can optionally skip this step.
+
+<<eval=TRUE, keep.source=TRUE>>=
+disconnectBioassayDB(mydb)
+@
+
+<<eval=TRUE, echo=FALSE>>=
+# delete temporary database
+unlink(myDatabaseFilename)
+@
+
+\section{Loading User Supplied Data}
+This section demonstrates the process for creating a new bioactivity database from user supplied data. As an example, we will demonstrate the process of downloading an assay from the NCBI PubChem Bioassay bioactivity data repository, and loading this into a new database\cite{Wang:2012hj}.
+
+First, get two files from Pubchem Bioassay for the assay of interest: an XML file containing details on how the experiment was performed, and a CSV (comma separated value) file which contains the actual activity scores. For the purposes of this example, we will use the data from assay 1000, which is a confirmatory assay (titration assay) of 57 small molecules against a mevalonate kinase protein. More details on this assay were provided in the  ``Quick Tutorial,'' where the same data is used. These files can be downloaded from PubChem Bioassay at \url{http://pubchem.ncbi.nlm.nih.gov/} or loaded from the example data repository included in this package as follows:
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR)
+extdata_dir <- system.file("extdata", package="bioassayR")
+assayDescriptionFile <- file.path(extdata_dir, "exampleAssay.xml")
+activityScoresFile <- file.path(extdata_dir, "exampleScores.csv")
+@
+
+Next, create a new empty database for loading these data into. This example uses the R \Rfunction{tempfile} function to create the database in a random location. If you would like to keep your resulting database, replace \Robject{myDatabaseFilename} with your desired path and filename.
+
+
+<<eval=TRUE, keep.source=TRUE>>=
+myDatabaseFilename <- tempfile()
+mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
+@
+
+\noindent We will also add a data source to this database, specifying that our data here mirrors an assay provided by PubChem Bioassay.
+<<eval=TRUE, keep.source=TRUE>>=
+addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+@
+
+The XML file provided by PubChem Bioassay contains extensive details on how the assay was performed, molecular targets, and results scoring methods. You can extract these using the \Rfunction{parsePubChemBioassay} function as follows.
+The \Rfunction{parsePubChemBioassay} function also requires a .csv file which contains the activity scores for each assay, in the standard CSV format provided by PubChem Bioassay.
+For data from sources other than PubChem Bioassay, you may need to write your own code to parse out the assay details- or type them in manually.
+
+<<eval=TRUE, keep.source=TRUE>>=
+myAssay <- parsePubChemBioassay("1000", activityScoresFile, assayDescriptionFile)
+myAssay
+@
+
+\noindent Next, load the resulting data parsed from the XML and CSV files into the database. This creates records in the database for both the assay itself, and it's molecular targets. 
+
+<<eval=TRUE, keep.source=TRUE>>=
+loadBioassay(mydb, myAssay)
+@
+
+\noindent To load additional assays, repeat the above steps. After all data is loaded, you can significantly improve subsequent query performance by adding an index to the database. 
+
+<<eval=TRUE, keep.source=TRUE>>=
+addBioassayIndex(mydb)
+@
+
+\noindent After indexing, perform some test queries on your database to confirm that the data loaded correctly.
+
+<<eval=TRUE, keep.source=TRUE>>=
+queryBioassayDB(mydb, "SELECT * FROM activity LIMIT 10")
+queryBioassayDB(mydb, "SELECT * FROM assays")
+queryBioassayDB(mydb, "SELECT * FROM targets LIMIT 10")
+@
+
+\noindent Lastly, disconnect from the database to prevent data corruption.
+
+<<eval=TRUE, keep.source=TRUE>>=
+disconnectBioassayDB(mydb)
+@
+
+<<eval=TRUE, echo=FALSE>>=
+# delete temporary database
+unlink(myDatabaseFilename)
+@
+
+\section{Prebuilt Database Example: Investigate Activity of a Known Drug}
+
+<<eval=FALSE, echo=FALSE>>=
+# this is code for building the example database used here- it should not
+# be visible to the reader in the final PDF
+library(bioassayR)
+pubChemDatabase <- connectBioassayDB("working/bioassayDatabase.sqlite")
+sampleDB <- newBioassayDB("src/bioassayR/inst/extdata/sampleDatabase.sqlite", indexed=F)
+addDataSource(sampleDB, description="bioassayR_testdata", version="unknown")
+
+# add activity rows
+activityRows <- queryBioassayDB(pubChemDatabase, "SELECT * FROM activity WHERE cid = '2244'")
+con <- slot(sampleDB, "database")
+sql <- paste("INSERT INTO activity VALUES ($aid, $cid, $sid, $activity, $score)", sep="")
+dbBeginTransaction(con)
+dbGetPreparedQuery(con, sql, bind.data = activityRows)
+dbCommit(con)
+
+# add assay ids and targets
+for(aid in activityRows[,1]){
+    assay <- queryBioassayDB(pubChemDatabase, paste("select * from assays where aid =", aid))
+    target <- queryBioassayDB(pubChemDatabase, paste("select * from targets where aid =", aid))
+    if(nrow(target) == 1){
+        addAssayTarget(sampleDB, aid = aid, target=target$target, target_type=target$target_type)
+    }
+    addBioassay(sampleDB, source="bioassayR_testdata", aid=aid, assay_type=assay$assay_type, organism=assay$organism, scoring=assay$scoring)
+}
+
+# load activity data for target 166897622
+assays <- queryBioassayDB(pubChemDatabase, "SELECT aid FROM targets WHERE target = '166897622'")[[1]]
+for(aid in assays[! assays %in% activityRows[,1]]){
+    assay <- queryBioassayDB(pubChemDatabase, paste("select * from assays where aid =", aid))
+    target <- queryBioassayDB(pubChemDatabase, paste("select * from targets where aid =", aid))
+    if(nrow(target) == 1){
+        addAssayTarget(sampleDB, aid = aid, target=target$target, target_type=target$target_type)
+    }
+    addBioassay(sampleDB, source="bioassayR_testdata", aid=aid, assay_type=assay$assay_type, organism=assay$organism, scoring=assay$scoring)
+
+    activityRows <- queryBioassayDB(pubChemDatabase, paste("SELECT * FROM activity WHERE aid =", aid))
+    con <- slot(sampleDB, "database")
+    sql <- paste("INSERT INTO activity VALUES ($aid, $cid, $sid, $activity, $score)", sep="")
+    dbBeginTransaction(con)
+    dbGetPreparedQuery(con, sql, bind.data = activityRows)
+    dbCommit(con)
+}
+
+disconnectBioassayDB(sampleDB)
+@
+
+A pre-built database containing large quantities of public domain bioactivity data sourced from the PubChem Bioassay database, can be downloaded from \url{http://chemmine.ucr.edu/bioassayr}. 
+While downloading the full database is recommended, it is possible to run this example using a small subset of the database, included within the \Rpackage{bioassayR} package for testing purposes.
+This example demonstrates the utility of \Rpackage{bioassayR} for identifying the bioactivity patterns of a small drug-like molecule. In this example, we look at the binding activity patterns for the drug acetylsalicylic acid (aka Aspirin) and compare these binding data to annotated targets in the DrugBank.ca drug database\cite{Wishart:2008bb}.
+
+The DrugBank database is a valuable resource containing numerous data on drug activity in humans, including known molecular targets. In this exercise, first take a look at the
+annotated molecular targets for acetylsalicylic acid by searching this name on \url{http://drugbank.ca}. This will provide a point of reference for comparing to the bioactivity
+data we find in the prebuild PubChem Bioassay database. Note that DrugBank also contains the PubChem CID of this compound, which you can use to query the bioassayR PubChem Bioassay
+database.
+
+To get started first connect to the database. The variable \Robject{sampleDatabasePath} can be replaced with the filename of the full test database you downloaded, if you would like to use
+that instead of the small example version included with this software package.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR)
+extdata_dir <- system.file("extdata", package="bioassayR")
+sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
+pubChemDatabase <- connectBioassayDB(sampleDatabasePath)  
+@
+
+Next, use the \Rfunction{activeTargets} function to find all protein targets which acetylsalicylic acid shows activity against in the loaded database.
+These target IDs are NCBI Protein identifiers as provided in PubChem Bioassay. In which cases do these results agree with or disagree
+with the annotated targets from DrugBank?
+
+<<eval=TRUE, keep.source=TRUE>>=
+drugTargets <- activeTargets(pubChemDatabase, "2244")
+drugTargets
+@
+
+Next, we will use the \Rpackage{ape} software library to get the protein sequences for these active targets, and to determine which species they may be from\cite{Paradis2004}.
+For more details on working with these sequences, consult the \Rpackage{ape} documentation.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(ape)
+targetSequences <- read.GenBank(row.names(drugTargets), species.names = TRUE)
+@
+
+\noindent Last, we print a table of the species names for each of these targets.
+<<eval=TRUE, keep.source=TRUE>>=
+cbind(attr(targetSequences, "species"), names(targetSequences))
+@
+
+\section{Identify Target Selective Compounds}
+In the previous example, acetylsalicylic acid was found to show binding activity against numerous proteins, including the COX-1 cyclooxygenase enzyme (NCBI Protein ID 166897622).
+COX-1 activity is theorized to be the key mechanism in this molecules function as a nonsteroidal anti-inflammatory drug (NSAID).
+In this example, we will look for other small molecules which selectively bind to COX-1, under the assumption that these may be worth further investigation as potential nonsteroidal anti-inflammatory drugs.
+This example shows how \Rpackage{bioassayR} can be used 
+identify small molecules which selectively bind to a target of interest, and assist in the
+discovery of small molecule drugs and molecular probes. 
+
+First, we will start by connecting to a database. 
+Once again, the variable \Robject{sampleDatabasePath} can be replaced with the filename of the full PubChem Bioassay database (downloadable from \url{http://chemmine.ucr.edu/bioassayr}), if you would like to use
+that instead of the small example version included with this software package.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR)
+extdata_dir <- system.file("extdata", package="bioassayR") 
+sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
+pubChemDatabase <- connectBioassayDB(sampleDatabasePath)  
+@
+
+The \Rfunction{activeAgainst} function can be used to show all small molecules in the database which demonstrate activity against COX-1 as follows.
+Each row name represents a small molecule cid. The column labeled ``total assays'' shows the total number of times each small molecule has been screened against the target of interest. The column labeled ``fraction active'' shows the portion of these which were annotated as active as a number between 0 and 1.
+This function allows users to consider different binding assays from distinct sources as replicates, to assist in distinguishing potentially spurious binding results from those with demonstrated reproducibility.
+
+<<eval=TRUE, keep.source=TRUE>>=
+activeCompounds <- activeAgainst(pubChemDatabase, "166897622")
+activeCompounds[1:10,] # look at the first 10 compounds
+@
+
+Looking only at compounds which show binding to the target of interest is not sufficient for identifying drug candidates, as a portion of these compounds may be target unselective compounds (TUCs) which bind
+indiscriminately to a large number of distinct protein targets. The R function \Rfunction{selectiveAgainst} provides the user with a list of compounds that show activity against a target of interest (in at least one assay), while also showing limited activity against other targets.
+
+The \Rfunarg{maxCompounds} option limits the maximum number of results returned, and the \Rfunarg{minimumTargets}
+option limits returned compounds to those screened against a specified minimum of distinct targets. Results are formatted as a \Robject{data.frame} whereby each row name represents a distinct compound. The first column shows the number of distinct targets this compound shows activity against, and the second shows the total number of targets it was screened against.
+
+<<eval=TRUE, keep.source=TRUE>>=
+selectiveCompounds <- selectiveAgainst(pubChemDatabase, "166897622", 
+    maxCompounds = 10, minimumTargets = 1)
+selectiveCompounds
+@
+
+In the example database these compounds are only showing one tested target because very few assays are loaded. Users are encouraged to try this example for themselves with the full PubChem Bioassay database downloadable from \url{http://chemmine.ucr.edu/bioassayr} for a more interesting and informative result.
+
+Users can combine \Rpackage{bioassayR} with the \Rpackage{ChemmineR} library to obtain structural information on these target selective compounds, and then perform further analysis- such as structural clustering, visualization, and computing physicochemical properties. 
+
+The \Rpackage{ChemmineR} software library can be used to download structural data for any of these compounds, and to visualize these structures as follows\cite{Cao2008c}.
+This example requires an active internet connection, as the compound structures are obtained from a remote server.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(ChemmineR)
+structures <- getIds(as.numeric(row.names(selectiveCompounds)))
+@
+
+\noindent Here we visualize just the first four compounds found with \Rfunction{selectiveAgainst}. Consult the vignette supplied with the \Rpackage{ChemmineR} for numerous powerful examples of visualizing and analyzing these structures further.
+<<plotstruct, eval=TRUE, fig=TRUE, keep.source=TRUE>>=
+plot(structures[1:4], print=FALSE) # Plots structures to R graphics device
+@
+
+\section{Cluster Compounds by Activity Profiles}
+
+This example demonstrates an example of clustering small molecules by similar bioactivity profiles across several distinct bioassay experiments.
+The function \Rfunction{activityMatrix} returns a complete matrix of each small molecule loaded in a database, and it's activity across each assay experiment loaded. As this is a cpu and memory intensive process for hundreds of thousands of assays, here we demonstrate pulling a small number of assays from a larger database into a small temporary database. A matrix can then be generated from these values, and compounds clustered according to similarities in their activity profiles.
+
+\noindent
+First, connect to the included sample database and copy three assays into a temporary database as follows:
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(bioassayR)
+extdata_dir <- system.file("extdata", package="bioassayR") 
+sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
+sampleDB <- connectBioassayDB(sampleDatabasePath)  
+myDatabaseFilename <- tempfile() 
+mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
+addDataSource(mydb, description="bioassayR_testdata", version="unknown")
+loadBioassay(mydb, getAssay(sampleDB, 53224))
+loadBioassay(mydb, getAssay(sampleDB, 53211))
+loadBioassay(mydb, getAssay(sampleDB, 207758))
+@
+
+\noindent
+Next, use \Rfunction{activityMatrix} to create a complete matrix from the small temp database.
+<<eval=TRUE, keep.source=TRUE>>=
+myMatrix <- activityMatrix(mydb)
+myMatrix
+@
+
+\noindent
+In these experiments, NA values (inconclusive results) are common. For the purpose of this example, we will consider these values as inactive, and assign zeros to create a ``complete matrix.'' We caution the user to carefully consider if this step makes sense within the context of the specific experiments being analyzed.
+
+<<eval=TRUE, keep.source=TRUE>>=
+myMatrix[is.na(myMatrix)] <- 0
+@
+
+\noindent
+Cluster using the built in euclidean clustering functions within R to cluster.
+This provides a dendrogram which indicates the similarity amongst compounds according to their activity profiles.
+
+<<eval=TRUE, keep.source=TRUE>>=
+clusterResults <- hclust(dist(myMatrix), method="average")
+@
+<<clusterResult, eval=TRUE, fig=TRUE, keep.source=TRUE>>=
+plot(clusterResults)
+@
+
+\noindent
+Finally, disconnect from the databases.
+<<eval=TRUE, keep.source=TRUE>>=
+disconnectBioassayDB(mydb)
+disconnectBioassayDB(sampleDB)
+@
+
+<<eval=TRUE, echo=FALSE>>=
+# delete temporary database
+unlink(myDatabaseFilename)
+@
+
+\section{Version Information}
+<<sessionInfo, results=tex, print=TRUE>>=
+toLatex(sessionInfo())
+@
+
+\section{Funding}
+This software was developed with funding from the National Science Foundation: \href{http://www.nsf.gov/awardsearch/showAward.do?AwardNumber=0957099}{{\textcolor{blue}{ABI-0957099}}}, 2010-0520325 and IGERT-0504249.
+
+\bibliography{bibtex}
+
+\end{document}
