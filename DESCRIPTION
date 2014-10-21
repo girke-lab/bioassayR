@@ -1,8 +1,8 @@
 Package: bioassayR
 Type: Package
 Title: R library for Bioactivity analysis 
-Version: 1.5.0
-Date: 2014-07-05
+Version: 1.5.1
+Date: 2014-10-21
 Author: Tyler Backman, Ronly Schlenk, Thomas Girke
 Maintainer: Tyler Backman <tyler.backman@ucr.edu>
 Depends: R (>= 3.1.0), DBI, RSQLite, methods, Matrix, rjson
