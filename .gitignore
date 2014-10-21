@@ -1,0 +1,7 @@
+.vagrant/*
+*.Rhistory
+*.RData
+*.pyc
+*~
+*.swp
+*.DS_Store

@@ -6,9 +6,9 @@ connectBioassayDB <- function (databasePath, writeable = F) {
 
     drv <- dbDriver("SQLite")
     if(writeable){
-        con <- sqliteNewConnection(drv, dbname=databasePath, flags=SQLITE_RW)
+        con <- dbConnect(drv, dbname=databasePath, flags=SQLITE_RW)
     } else {
-        con <- sqliteNewConnection(drv, dbname=databasePath, flags=SQLITE_RO)
+        con <- dbConnect(drv, dbname=databasePath, flags=SQLITE_RO)
     }
     new("BioassayDB", database = con)
 }
@@ -91,7 +91,7 @@ addDataSource <- function(database, description, version){
 
     con <- slot(database, "database")
     sql <- "INSERT INTO sources VALUES (NULL, $DESCRIPTION, $VERSION)"
-    dbBeginTransaction(con)
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = data.frame(DESCRIPTION=description, VERSION=version))
     dbCommit(con)
     invisible()
@@ -190,7 +190,7 @@ dropBioassay <- function(database, aid){
     con <- slot(database, "database")
     for(x in c("activity", "assays", "targets")){
         sql <- paste("DELETE FROM", x, "WHERE aid = $AID")
-        dbBeginTransaction(con)
+        dbBegin(con)
         dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aid))
         dbCommit(con)
     }
@@ -219,7 +219,7 @@ loadBioassay <- function(database, bioassay){
 
     # load assay details
     sql <- paste("INSERT INTO assays VALUES ('", source_int, "', $AID, $ASSAY_TYPE, $ORGANISM, $SCORING)", sep="")
-    dbBeginTransaction(con)
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aid(bioassay), ASSAY_TYPE=assay_type(bioassay), ORGANISM=organism(bioassay), SCORING=scoring(bioassay)))
     dbCommit(con)
 
@@ -243,7 +243,7 @@ loadBioassay <- function(database, bioassay){
     } 
     con <- slot(database, "database")
     sql <- paste("INSERT INTO targets VALUES ($AID, $TARGET, $TARGET_TYPE)", sep="")
-    dbBeginTransaction(con)
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aid, TARGET=target, TARGET_TYPE=target_type))
     dbCommit(con)
     invisible()
@@ -258,7 +258,7 @@ loadBioassay <- function(database, bioassay){
     colnames(dataTable) <- c("CID", "ACTIVITY", "SCORE")
     con <- slot(database, "database")
     sql <- paste("INSERT INTO activity VALUES ('", aid, "', $CID, $ACTIVITY, $SCORE)", sep="")
-    dbBeginTransaction(con)
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = dataTable)
     dbCommit(con)
     invisible()
