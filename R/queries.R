@@ -368,36 +368,45 @@ activityMatrix <- function(database, maxAssayLimit=100){
 .targetsByAids  <- function(database, aids){
     con <- slot(database, "database")
     sql <- paste("SELECT * FROM targets WHERE aid = $AID")
-    dbBeginTransaction(con)
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbBegin(con)
+    result <- dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbCommit(con)
+    return(result)
 }
 
 .activityByAids <- function(database, aids){
     con <- slot(database, "database")
     sql <- paste("SELECT * FROM activity WHERE aid = $AID")
-    dbBeginTransaction(con)
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbBegin(con)
+    result <- dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbCommit(con)
+    return(result)
 }
 
 .activityByCids <- function(database, cids){
     con <- slot(database, "database")
     sql <- paste("SELECT * FROM activity WHERE cid = $CID")
-    dbBeginTransaction(con)
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(CID=cids))
+    dbBegin(con)
+    result <- dbGetPreparedQuery(con, sql, bind.data = data.frame(CID=cids))
+    dbCommit(con)
+    return(result)
 }
 
 .assaysByAids <- function(database, aids){
     con <- slot(database, "database")
     sql <- paste("SELECT * FROM assays WHERE aid = $AID")
-    dbBeginTransaction(con)
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbBegin(con)
+    result <- dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbCommit(con)
+    return(result)
 }
 
 .sourcesByAids <- function(database, aids){
     con <- slot(database, "database")
     sql <- paste("SELECT DISTINCT source_id, description, version FROM assays NATURAL JOIN sources WHERE aid = $AID")
-    dbBeginTransaction(con)
+    dbBegin(con)
     result <- dbGetPreparedQuery(con, sql, bind.data = data.frame(AID=aids))
+    dbCommit(con)
     result[unique(result$source_id),]
 }
 
