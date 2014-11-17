@@ -32,7 +32,7 @@ setMethod("queryBioassayDB", signature(object="BioassayDB"),
 ###############################
 
 .writeable <- function(object){
-    if(dbGetInfo(slot(object, "database"))$flags == SQLITE_RO){
+    if(slot(object, "database")@flags == SQLITE_RO){
         return(FALSE)
     } else {
         return(TRUE)

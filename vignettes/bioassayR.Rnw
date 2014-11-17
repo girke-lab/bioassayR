@@ -263,7 +263,7 @@ addDataSource(sampleDB, description="bioassayR_testdata", version="unknown")
 activityRows <- queryBioassayDB(pubChemDatabase, "SELECT * FROM activity WHERE cid = '2244'")
 con <- slot(sampleDB, "database")
 sql <- paste("INSERT INTO activity VALUES ($aid, $cid, $sid, $activity, $score)", sep="")
-dbBeginTransaction(con)
+dbBegin(con)
 dbGetPreparedQuery(con, sql, bind.data = activityRows)
 dbCommit(con)
 
@@ -290,7 +290,7 @@ for(aid in assays[! assays %in% activityRows[,1]]){
     activityRows <- queryBioassayDB(pubChemDatabase, paste("SELECT * FROM activity WHERE aid =", aid))
     con <- slot(sampleDB, "database")
     sql <- paste("INSERT INTO activity VALUES ($aid, $cid, $sid, $activity, $score)", sep="")
-    dbBeginTransaction(con)
+    dbBegin(con)
     dbGetPreparedQuery(con, sql, bind.data = activityRows)
     dbCommit(con)
 }
