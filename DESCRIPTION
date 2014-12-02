@@ -1,18 +1,17 @@
 Package: bioassayR
 Type: Package
-Title: R library for Bioactivity analysis
-Version: 1.4.2
-Date: 2014-10-24
+Title: R library for Bioactivity analysis 
+Version: 1.4.3
+Date: 2014-12-02
 Author: Tyler Backman, Ronly Schlenk, Thomas Girke
 Maintainer: Tyler Backman <tyler.backman@ucr.edu>
-Depends: R (>= 3.1.0), DBI, RSQLite, methods, Matrix, rjson
+Depends: R (>= 3.1.0), DBI (>= 0.3.1), RSQLite (>= 1.0.0), methods, Matrix, rjson
 Imports: XML
-Suggests: BiocStyle, RCurl, ape, ChemmineR
+Suggests: BiocStyle, RCurl, ape, ChemmineR 
 Description: bioassayR provides tools for statistical analysis of small molecule bioactivity data 
 License: Artistic-2.0
-biocViews: MicrotitrePlateAssay, CellBasedAssays, Visualization,
-        Infrastructure, DataImport, Bioinformatics, Proteomics
-LazyLoad: yes
+biocViews: MicrotitrePlateAssay, CellBasedAssays, Visualization, Infrastructure, DataImport, Bioinformatics, Proteomics 
+LazyLoad: yes 
 Collate: AllClasses.R AllGenerics.R BioassayDB-accessors.R
         bioassay-accessors.R loadingData.R queries.R
         bioassaySet-accessors.R
