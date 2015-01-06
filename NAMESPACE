@@ -33,7 +33,6 @@ export(
     "getAssay",
     "getAssays",
     "parsePubChemBioassay",
-    "activityMatrix",
     "getBioassaySetByCids",
     "perTargetMatrix"
 )
