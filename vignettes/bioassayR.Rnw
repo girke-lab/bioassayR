@@ -37,6 +37,7 @@ BiocStyle::latex()
 % \bibliographystyle{plainnat}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \title{bioassayR: small molecule bioactivity analysis}
 \author{Tyler Backman, Thomas Girke \\
  Email contact: thomas.girke@ucr.edu}
@@ -57,7 +58,9 @@ identify small molecules active against a protein or organism of interest, ident
 \section{\textcolor{red}{Recently Added Features}}
 
 \begin{itemize}
-    \item initial package release
+    \item added \Robject{bioassaySet} object for storing multiple assays in memory
+    \item added workflow example for raw screening data
+    \item added \Robject{perTargetMatrix} function to compute a sparse matrix summarizing select bioactivity data
 \end{itemize}
 
 \section{Getting Started}
@@ -85,7 +88,7 @@ This example walks you through creating a new empty database, adding example sma
 This example includes real experimental data from an antibiotics discovery experiment. These data are a ``confirmatory bioassay'' where 57 small molecules were screened against the mevalonate kinase protein from the {\it Streptococcus pneumonia} (SP) bacteria. Mevalonate kinase inhibitors are one possible class of antibiotic drugs that may be effective against this infamous bacteria.
 These data were published as assay identifier (aid) 1000 in the NCBI PubChem Bioassay database, by Dr. Thomas S. Leyh.
 
-First, create a new database. For purposes of this manual a tempfile is used, but you can replace the \Rfunction{tempfile} function call with a filename of your choice if you wish to save the resulting database for later.
+First, create a new database. For purposes of this manual a temporary file is used, but you can replace the \Rfunction{tempfile} function call with a filename of your choice if you wish to save the resulting database for later.
 
 <<eval=TRUE, keep.source=TRUE>>=
 library(bioassayR)
@@ -101,7 +104,7 @@ addDataSource(mydb, description="PubChem Bioassay", version="unknown")
 @
 
 After adding a data source, create or import a \Rclass{data.frame} which contains the activity scores for each of the molecules in your assay. 
-This \Rclass{data.frame} must contain four columns which includes a cid (unique compound identifer) for each compound, an sid (often used to distinguish distinct samples of the same compound structure), a binary activity score ($1=active$, $0=inactive$), and a numeric activity score.
+This \Rclass{data.frame} must contain four columns which includes a cid (unique compound identifier) for each compound, an sid (often used to distinguish distinct samples of the same compound structure), a binary activity score ($1=active$, $0=inactive$), and a numeric activity score.
 Consult the \Rclass{bioassay} man page for more details on formatting this \Rclass{data.frame}. The \Rpackage{bioassayR} package contains an example activity score data frame that can be accessed as follows:
 <<eval=TRUE, keep.source=TRUE>>=
 data(samplebioassay)
@@ -161,7 +164,7 @@ of the database as follows:
 queryBioassayDB(mydb, "SELECT * FROM sqlite_master WHERE type='table'")
 @
 
-\noindent As this is a sqlite database, you can consult \url{http://www.sqlite.org} for specifics on building SQL queries. For example, you can find all assays a given compound has participated in as follows:
+\noindent As this is a SQLite database, you can consult \url{http://www.sqlite.org} for specifics on building SQL queries. For example, you can find all assays a given compound has participated in as follows:
 
 <<eval=TRUE, keep.source=TRUE>>=
 queryBioassayDB(mydb, "SELECT DISTINCT(aid) FROM activity WHERE cid = '16749979'")
@@ -230,12 +233,10 @@ loadBioassay(mydb, myAssay)
 addBioassayIndex(mydb)
 @
 
-\noindent After indexing, perform some test queries on your database to confirm that the data loaded correctly.
+\noindent After indexing, perform a test query on your database to confirm that the data loaded correctly.
 
 <<eval=TRUE, keep.source=TRUE>>=
-queryBioassayDB(mydb, "SELECT * FROM activity LIMIT 10")
-queryBioassayDB(mydb, "SELECT * FROM assays")
-queryBioassayDB(mydb, "SELECT * FROM targets LIMIT 10")
+activeAgainst(mydb,"116516899")
 @
 
 \noindent Lastly, disconnect from the database to prevent data corruption.
@@ -396,39 +397,37 @@ structures <- getIds(as.numeric(row.names(selectiveCompounds)))
 plot(structures[1:4], print=FALSE) # Plots structures to R graphics device
 @
 
-\section{Cluster Compounds by Activity Profiles}
+\section{Cluster Compounds by Activity Profile}
 
 This example demonstrates an example of clustering small molecules by similar bioactivity profiles across several distinct bioassay experiments.
-The function \Rfunction{activityMatrix} returns a complete matrix of each small molecule loaded in a database, and it's activity across each assay experiment loaded. As this is a cpu and memory intensive process for hundreds of thousands of assays, here we demonstrate pulling a small number of assays from a larger database into a small temporary database. A matrix can then be generated from these values, and compounds clustered according to similarities in their activity profiles.
+In many cases it is too cpu and memory intensive to cluster all compounds in the database, so we first pull just a subset of these data from the database into an \Robject{bioassaySet} object, and then convert that into a compounds vs targets activity matrix for subsequent clustering according to similarities in activity profiles.
+The function \Rfunction{getBioassaySetByCids} extracts the activity data for a given list of compounds. Alternatively, the entire data for a given list of assay ids can be extracted with the function \Rfunction{getAssays}.
 
 \noindent
-First, connect to the included sample database and copy three assays into a temporary database as follows:
+First, connect to the included sample database:
 
 <<eval=TRUE, keep.source=TRUE>>=
 library(bioassayR)
 extdata_dir <- system.file("extdata", package="bioassayR") 
 sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
 sampleDB <- connectBioassayDB(sampleDatabasePath)  
-myDatabaseFilename <- tempfile() 
-mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
-addDataSource(mydb, description="bioassayR_testdata", version="unknown")
-loadBioassay(mydb, getAssay(sampleDB, 53224))
-loadBioassay(mydb, getAssay(sampleDB, 53211))
-loadBioassay(mydb, getAssay(sampleDB, 207758))
 @
 
 \noindent
-Next, use \Rfunction{activityMatrix} to create a complete matrix from the small temp database.
+Next, select data from just 3 compounds to extract into a \Robject{bioassaySet} object for subsequent analysis.
+
 <<eval=TRUE, keep.source=TRUE>>=
-myMatrix <- activityMatrix(mydb)
-myMatrix
+compoundsOfInterest <- c("2244", "2662", "3715")
+selectedAssayData <- getBioassaySetByCids(sampleDB, compoundsOfInterest)
+selectedAssayData
 @
 
 \noindent
-In these experiments, NA values (inconclusive results) are common. For the purpose of this example, we will consider these values as inactive, and assign zeros to create a ``complete matrix.'' We caution the user to carefully consider if this step makes sense within the context of the specific experiments being analyzed.
+The function \Rfunction{perTargetMatrix} converts the activity data extracted earlier into a matrix of targets (rows) vs compounds (columns). Data from multiple assays hitting the same target is summarized by giving a "1" (active) if any of these data are active. Both inactive scores and untested combinations are assigned zeros (inactive) to create a ``complete matrix.'' We caution the user to carefully consider if this step makes sense within the context of the specific experiments being analyzed. Here a sparse matrix (which omits actually storing 0 values) is used to save memory.
 
 <<eval=TRUE, keep.source=TRUE>>=
-myMatrix[is.na(myMatrix)] <- 0
+myActivityMatrix <- perTargetMatrix(selectedAssayData)
+myActivityMatrix
 @
 
 \noindent
@@ -436,17 +435,125 @@ Cluster using the built in euclidean clustering functions within R to cluster.
 This provides a dendrogram which indicates the similarity amongst compounds according to their activity profiles.
 
 <<eval=TRUE, keep.source=TRUE>>=
-clusterResults <- hclust(dist(myMatrix), method="average")
+transposedMatrix <- t(myActivityMatrix)
+distanceMatrix <- dist(transposedMatrix)
+clusterResults <- hclust(distanceMatrix, method="average")
 @
 <<clusterResult, eval=TRUE, fig=TRUE, keep.source=TRUE>>=
 plot(clusterResults)
 @
 
 \noindent
-Finally, disconnect from the databases.
+Finally, disconnect from the database.
+<<eval=TRUE, keep.source=TRUE>>=
+disconnectBioassayDB(sampleDB)
+@
+
+\section{Analyze and Load Raw Screening Data}
+
+\noindent
+This example demonstrates the basics of analyzing and loading data
+from a high throughput screening experiment with scores for 21,888
+distinct compounds.
+
+\noindent
+This example is based on the \Rpackage{cellHTS2} library. Example data
+is used which is included with \Rpackage{cellHTS2}. This is actually data from
+screening dsRNA against live cells, however we will treat it as small molecule
+binding data against a protein target as the data format is the same.
+
+\noindent
+First read in the screening data provided with cellHTS2.
+
+<<eval=TRUE, keep.source=TRUE>>=
+library(cellHTS2)
+library(bioassayR)
+
+dataPath <- system.file("KcViab", package="cellHTS2")
+x <- readPlateList("Platelist.txt", 
+                   name="KcViab", 
+                   path=dataPath)
+
+x <- configure(x,
+               descripFile="Description.txt", 
+               confFile="Plateconf.txt", 
+               logFile="Screenlog.txt", 
+               path=dataPath)
+
+xn <- normalizePlates(x, 
+                      scale="multiplicative", 
+                      log=FALSE, 
+                      method="median", 
+                      varianceAdjust="none")
+@
+
+\noindent
+Next, score and summarize the replicates.
+
+<<eval=TRUE, keep.source=TRUE>>=
+xsc <- scoreReplicates(xn, sign="-", method="zscore")
+xsc <- summarizeReplicates(xsc, summary="mean")
+@
+
+\noindent
+Parse the annotation data.
+
+<<eval=TRUE, keep.source=TRUE>>=
+xsc <- annotate(xsc, geneIDFile="GeneIDs_Dm_HFA_1.1.txt", path=dataPath)
+@
+
+\noindent
+Apply a sigmoidal transformation to generate binary calls.
+
+<<eval=TRUE, keep.source=TRUE>>=
+y <- scores2calls(xsc, z0=1.5, lambda=2)
+binaryCalls <- round(Data(y))
+@
+
+\noindent
+Convert the binary calls into an activity table that \Rpackage{bioassayR} can parse.
+
+<<eval=TRUE, keep.source=TRUE>>=
+scoreDataFrame <- cbind(geneAnno(y), binaryCalls)
+scoreDataFrame <- scoreDataFrame[wellAnno(y) == "sample",]
+activityTable <- cbind(cid=scoreDataFrame[,1], sid=scoreDataFrame[,1], 
+     activity=scoreDataFrame[,2], score=Data(xsc))
+activityTable <- as.data.frame(activityTable)
+activityTable[1:10,]
+@
+
+\noindent
+Create a new (temporary in this case) \Rpackage{bioassayR} database to load these data into.
+
+<<eval=TRUE, keep.source=TRUE>>=
+myDatabaseFilename <- tempfile() 
+mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
+addDataSource(mydb, description="other", version="unknown")
+@
+
+\noindent
+Create an assay object for the new assay.
+
+<<eval=TRUE, keep.source=TRUE>>=
+myAssay <- new("bioassay",aid="1", source_id="other",
+     assay_type="confirmatory", organism="unknown", scoring="activity rank", 
+     targets="2224444", target_types="protein", scores=activityTable)
+@
+
+\noindent
+Load this assay object into the \Rpackage{bioassayR} database.
+
+<<eval=TRUE, keep.source=TRUE>>=
+loadBioassay(mydb, myAssay)
+mydb
+@
+
+Now that these data are loaded, you can use them to perform any of the other analysis examples in this document.
+
+Lastly, for the purposes of this example, disconnect from the example database.
+
 <<eval=TRUE, keep.source=TRUE>>=
 disconnectBioassayDB(mydb)
-disconnectBioassayDB(sampleDB)
 @
 
 <<eval=TRUE, echo=FALSE>>=

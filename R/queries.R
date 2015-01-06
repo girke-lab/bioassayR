@@ -339,28 +339,6 @@ getAssay <- function(database, aid){
     )
 }
 
-# this returns a matrix with activity values for each compound in the database
-activityMatrix <- function(database, maxAssayLimit=100){
-    if(class(database) != "BioassayDB")
-        stop("database not of class BioassayDB")
-    if(! is.numeric(maxAssayLimit))
-        stop("maxAssayLimit not numeric")
-
-    totalAssays <- queryBioassayDB(database, "SELECT COUNT(DISTINCT aid) FROM assays")[[1]]
-    if(totalAssays > maxAssayLimit){
-        stop("Database has too many assays. Try a larger maxAssayLimit or smaller database.")
-    }
-    result <- queryBioassayDB(database, "SELECT cid, aid, activity FROM activity")
-    cids <- unique(result$cid)
-    aids <- unique(result$aid)
-    fullMatrix <- matrix(nrow=length(cids), ncol=length(aids), dimnames=list(cids, aids))
-    splitResult <- split(result, result$cid)
-    for(x in splitResult){
-        fullMatrix[as.character(x$cid[1]),as.character(x$aid)] <- x$activity
-    }
-    return(fullMatrix)
-}
-
 ###########
 # queries #
 ###########
