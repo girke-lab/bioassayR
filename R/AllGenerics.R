@@ -14,9 +14,6 @@ setGeneric(name="source_id<-", def=function(x, value) standardGeneric("source_id
 setGeneric(name="assay_type", def=function(x) standardGeneric("assay_type"))
 setGeneric(name="assay_type<-", def=function(x, value) standardGeneric("assay_type<-"))
 
-setGeneric(name="organism", def=function(x) standardGeneric("organism"))
-setGeneric(name="organism<-", def=function(x, value) standardGeneric("organism<-"))
-
 setGeneric(name="scoring", def=function(x) standardGeneric("scoring"))
 setGeneric(name="scoring<-", def=function(x, value) standardGeneric("scoring<-"))
 
