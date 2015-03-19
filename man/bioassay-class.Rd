@@ -76,8 +76,8 @@ containing the bioactivity data to be loaded. This must be a 4 column data frame
     \item{aid<-}{\code{signature(x = "bioassay")}: ... }
     \item{assay_type}{\code{signature(x = "bioassay")}: ... }
     \item{assay_type<-}{\code{signature(x = "bioassay")}: ... }
-    \item{organism}{\code{signature(x = "bioassay")}: ... }
-    \item{organism<-}{\code{signature(x = "bioassay")}: ... }
+    \item{organism}{\code{signature(object = "bioassay")}: ... }
+    \item{organism<-}{\code{signature(object = "bioassay")}: ... }
     \item{scores}{\code{signature(x = "bioassay")}: ... }
     \item{scores<-}{\code{signature(x = "bioassay")}: ... }
     \item{scoring}{\code{signature(x = "bioassay")}: ... }

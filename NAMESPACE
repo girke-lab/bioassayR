@@ -1,6 +1,7 @@
 ## IMPORTS
 import(DBI, RSQLite, methods, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
+importFrom("BiocGenerics", organism, "organism<-")
 
 ## EXPORTS
 ## S4 Classes
