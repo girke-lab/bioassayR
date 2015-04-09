@@ -1,10 +1,10 @@
 \name{inactiveTargets}
 \alias{inactiveTargets}
 \title{
-Takes a single cid and returns a table of the proteins it has been found inactive against. 
+Show targets against which a small molecule is active
 }
 \description{
-Returns a \code{data.frame} of all targets a single cid (compound) has been found inactive against, and the number of times it has been found inactive in distinct assay experiments. If a compound has been found both active and inactive in different assays, it will be listed among these results.
+Returns a \code{data.frame} of the protein targets (target_type for the protein must be 'protein'), which a given small molecule (specified by cid) shows activity against. For each target, a single row shows the total number of distinct screens it participated in, and the fraction of those in which it exhibits activity.
 }
 \usage{
 inactiveTargets(database, cid)
@@ -18,7 +18,7 @@ A string or integer containing a cid referring to a small molecule.
 }
 }
 \value{
-A \code{data.frame} where the row names represent each target the specified compound shows inactivity against, and the column shows the number of assays in which it was found to be inactive.
+A \code{data.frame} where the row names represent each target the specified compound shows activity against, and the columns show the total screens and the fraction in which the compound was active.
 }
 \author{
 Tyler Backman
@@ -33,11 +33,7 @@ sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
 sampleDB <- connectBioassayDB(sampleDatabasePath)
 
 ## get targets that compound 2244 shows activity against
-myCidInactiveTargets <- row.names(inactiveTargets(sampleDB, "2244"))
-
-## exclude targets from this list that have also been found active 
-myCidActiveTargets <- row.names(activeTargets(sampleDB, "2244"))
-myCidInactiveOnly <- myCidInactiveTargets[! myCidInactiveTargets %in% myCidActiveTargets]
+myTargets <- row.names(activeTargets(sampleDB, "2244"))
 
 ## disconnect from database
 disconnectBioassayDB(sampleDB)
