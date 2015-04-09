@@ -23,6 +23,9 @@ A \code{data.frame} where the row names represent each target the specified comp
 \author{
 Tyler Backman
 }
+\seealso{
+\code{\link{inactiveTargets}}
+}
 \examples{
 ## connect to a test database
 extdata_dir <- system.file("extdata", package="bioassayR")

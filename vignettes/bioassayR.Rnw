@@ -58,9 +58,11 @@ identify small molecules active against a protein or organism of interest, ident
 \section{\textcolor{red}{Recently Added Features}}
 
 \begin{itemize}
-    \item added \Robject{bioassaySet} object for storing multiple assays in memory
-    \item added workflow example for raw screening data
-    \item added \Robject{perTargetMatrix} function to compute a sparse matrix summarizing select bioactivity data
+    \item added \Rfunction{inactiveTargets} which finds targets a compound is inactive against
+    \item added \Rfunction{targetSelectivity} which computes target selectivity for a list of compounds
+    \item added \Rfunction{screenedAtLeast} which returns a list of CIDs screened at least X times
+    \item added \Rfunction{loadIdMapping} which stores protein identifier mappings
+    \item added \Rfunction{translateTargetId} which retrieves stored protein identifier mappings
 \end{itemize}
 
 \section{Getting Started}

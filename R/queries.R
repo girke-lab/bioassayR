@@ -29,6 +29,30 @@ activeTargets <- function(database, cid) {
     return(resultByTarget)
 }
 
+# takes a cid and returns a table of the proteins it has been found inactive against 
+inactiveTargets <- function(database, cid) {
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
+    if(is.numeric(cid)){
+        cid <- as.character(cid)
+    } else if(! is.character(cid)){
+        stop("input not class character")
+    }
+    if(length(cid) > 1){
+        warning("too many inputs, only the first was kept")
+        cid <- cid[1]
+    }
+    if(! grepl("^[a-zA-Z_0-9\\s]+$", cid, perl=T))
+        stop("invalid input: must contain only alphanumerics and/or whitespace")
+
+    queryResult <- .targetsByCid(database, cid, activity = 0) 
+    if(nrow(queryResult) == 0){ return (NA) }
+    inactiveTargets <- table(queryResult[,3])
+    inactiveTargets <- as.data.frame(inactiveTargets, row.names=(names(inactiveTargets)))[1:10,2, drop=FALSE]
+    colnames(inactiveTargets) <- "inactive screens"
+    return(inactiveTargets)
+}
+
 # takes a target id and returns a table of compounds that show activity against it
 activeAgainst <- function(database, target){
     if(class(database) != "BioassayDB")
@@ -339,9 +363,74 @@ getAssay <- function(database, aid){
     )
 }
 
+# takes cids and a database and returns the target selectivity of the query cids
+# scoring method is either as total active targets or fraction of active targets
+targetSelectivity <- function(database, cids, scoring="total"){
+    if(class(database) != "BioassayDB")
+        stop("'database' not of class 'BioassayDB'")
+    if(is.numeric(cids)){
+        cids <- as.character(cids)
+    } else if(! is.character(cids)){
+        stop("'cids' not class 'character'")
+    }
+    if(! scoring %in% c("total", "fraction")){
+        stop("'scoring' must be of type 'total' or 'fraction'")
+    }
+    activeTargets <- sapply(cids, function(cid){
+        length(unique(.targetsByCid(database, cid, activity = 1)$target))    
+    })
+    if(scoring == "total"){
+        return(activeTargets)
+    }
+    inactiveTargets <- sapply(cids, function(cid){
+        length(unique(.targetsByCid(database, cid, activity = 0)$target))    
+    })
+    return(activeTargets/(activeTargets+inactiveTargets))    
+}
+
+# takes a minimum number of distinct protein targets
+# and returns all CIDs screened against at least that many proteins
+screenedAtLeast <- function(database, minTargets){
+    if(class(database) != "BioassayDB")
+        stop("'database' not of class 'BioassayDB'")
+    if(class(minTargets) != "numeric")
+        stop("'minTargets' not of class 'numeric'")
+    counts <- .screenedAtLeast(database, minTargets)
+    return(counts$cid[! is.na(counts$cid)])
+}
+
+# takes a target identifier and category and returns its translation
+# to another target type
+translateTargetId <- function(database, target, category){
+    if(class(database) != "BioassayDB")
+        stop("'database' not of class 'BioassayDB'")
+    result <- .translateTargetId(database, target, category)[[1]]
+    if(length(result) == 0)
+        result <- NA
+    return(result)
+}
+
 ###########
 # queries #
 ###########
+
+.translateTargetId <- function(database, target, category){
+    queryBioassayDB(database, paste(
+        "SELECT identifier",
+        " FROM targetTranslations",
+        " WHERE target = '", target, "'",
+        " AND category = '", category, "'",
+        sep=""))
+}
+
+.screenedAtLeast <- function(database, minTargets){
+    queryBioassayDB(database, paste(
+        "SELECT cid, COUNT(DISTINCT(target)) AS distinctTargets",
+        " FROM activity",
+        " NATURAL JOIN targets",
+        " GROUP BY cid",
+        " HAVING distinctTargets >= ", minTargets, sep=""))
+}
 
 .targetsByAids  <- function(database, aids){
     con <- slot(database, "database")
@@ -389,13 +478,16 @@ getAssay <- function(database, aid){
 }
 
 # Performance: indexes activity_cid, and targets_aid provide ~12x speedup
-.targetsByCid <- function(database, cid){
+.targetsByCid <- function(database, cid, activity = "NOT NULL"){
+    if(activity != "NOT NULL"){
+        activity <- paste("= '", activity, "'", sep="")
+    }
     queryBioassayDB(database, paste(
         "SELECT activity.aid, activity.activity, targets.target",
         " FROM activity",
         " NATURAL JOIN targets",
         " WHERE activity.cid = '", cid, "'",
-        " AND activity.activity NOT NULL",
+        " AND activity.activity ", activity,
         " AND targets.target_type = 'protein'",
         sep = ""
     ))

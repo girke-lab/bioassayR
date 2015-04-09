@@ -29,11 +29,16 @@ export(
     "addBioassayIndex",
     "dropBioassayIndex",
     "activeTargets", 
+    "inactiveTargets", 
     "activeAgainst",
     "selectiveAgainst",
     "getAssay",
     "getAssays",
     "parsePubChemBioassay",
     "getBioassaySetByCids",
-    "perTargetMatrix"
+    "perTargetMatrix",
+    "targetSelectivity",
+    "screenedAtLeast",
+    "loadIdMapping",
+    "translateTargetId"
 )

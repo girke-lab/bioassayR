@@ -47,6 +47,8 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
         "description TEXT, version TEXT)"))
     dbGetQuery(con, paste("CREATE TABLE targets",
         "(aid INTEGER, target TEXT, target_type TEXT)"))
+    dbGetQuery(con, paste("CREATE TABLE targetTranslations",
+        "(target TEXT, category TEXT, identifier TEXT)"))
     dbDisconnect(con)
     database <- connectBioassayDB(databasePath, writeable = T)
     if(indexed){
@@ -276,6 +278,7 @@ addBioassayIndex <- function(database){
     queryBioassayDB(database, "CREATE INDEX IF NOT EXISTS activity_cid ON activity (cid)")
     queryBioassayDB(database, "CREATE INDEX IF NOT EXISTS targets_aid ON targets (aid)")
     queryBioassayDB(database, "CREATE INDEX IF NOT EXISTS targets_target ON targets (target)")
+    queryBioassayDB(database, "CREATE INDEX IF NOT EXISTS targetTranslations_target ON targetTranslations (target)")
     invisible()
 }
 
@@ -291,5 +294,18 @@ dropBioassayIndex <- function(database){
     queryBioassayDB(database, "DROP INDEX IF EXISTS activity_cid")
     queryBioassayDB(database, "DROP INDEX IF EXISTS targets_aid")
     queryBioassayDB(database, "DROP INDEX IF EXISTS targets_target")
+    queryBioassayDB(database, "DROP INDEX IF EXISTS targetTranslations_target")
+    invisible()
+}
+
+# add a new target id mapping 
+loadIdMapping <- function(database, target, category, identifier){
+    if(class(database) != "BioassayDB")
+        stop("database not of class BioassayDB")
+    if(! .writeable(database)){
+        stop("database opened in read only mode")
+    } 
+    sql <- paste("INSERT INTO targetTranslations VALUES ('", target, "', '", category, "', '", identifier, "')", sep="")
+    queryBioassayDB(database, sql)
     invisible()
 }
