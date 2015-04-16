@@ -1,0 +1,487 @@
+<?xml version="1.0"?>
+<PC-AssayDescription
+    xmlns="http://www.ncbi.nlm.nih.gov"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+    xs:schemaLocation="http://www.ncbi.nlm.nih.gov ftp://ftp.ncbi.nlm.nih.gov/pubchem/specifications/pubchem.xsd"
+>
+  <PC-AssayDescription_aid>
+    <PC-ID>
+      <PC-ID_id>1000</PC-ID_id>
+      <PC-ID_version>1</PC-ID_version>
+    </PC-ID>
+  </PC-AssayDescription_aid>
+  <PC-AssayDescription_aid-source>
+    <PC-Source>
+      <PC-Source_db>
+        <PC-DBTracking>
+          <PC-DBTracking_name>SRMLSC</PC-DBTracking_name>
+          <PC-DBTracking_source-id>
+            <Object-id>
+              <Object-id_str>SPE-MK-Sec</Object-id_str>
+            </Object-id>
+          </PC-DBTracking_source-id>
+        </PC-DBTracking>
+      </PC-Source_db>
+    </PC-Source>
+  </PC-AssayDescription_aid-source>
+  <PC-AssayDescription_name>Screening for Inhibitors of the Mevalonate Pathway in Streptococcus Pneumoniae - MK Secondary Assay</PC-AssayDescription_name>
+  <PC-AssayDescription_description>
+    <PC-AssayDescription_description_E>Southern Research Molecular Libraries Screening Center (SRMLSC) </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Southern Research Institute (Birmingham, Alabama) </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>NIH Molecular Libraries Screening Centers Network (MLSCN) </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Assay Provider: Dr. Thomas S. Leyh, Albert Einstein College of medicine of Yeshiva University </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Award: R03 MH078936-01</PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Streptococcus pneumonia (SP) takes the lives of nearly 4,000 people daily and antibiotic resistant strains are becoming an increasing problem. Because of this, the discovery of drugs targeting novel pathways such as the mevalonate pathway has become increasingly important. The pathway produces isopentyl diphosphate (the molecular building block of isoprenoids) and is essential for the survival of the pathogen in mouse lung and serum. The mevalonate pathway is comprised of three consecutive reactions that are catalyzed by the enzymes mevalonate kinase (MK; E.C. 2.7.1.36), phosphomevalonate kinase (PMK; E.C. 2.7.4.2), and diphosphomevalonate decarboxylase (PDM-DC; E.C. 4.1.1.33). MK catalyzes the ATP dependent conversion of (R)-mevalonate to ADP plus (R)-5-phosphomevalonate. </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>The activity of MK was measured spectrophotometrically by coupling the formation of ADP to the reactions of pyruvate kinase and lactate dehydrogenase. The rate of ADP formation was quantitated by the reduction of absorbance (OD340) due to the oxidation of NADH to NAD by lactate dehydrogenase. A kinetic assay was chosen to minimize interference by compounds that absorbed at 340 nm.</PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>A total of 57 compounds were initially screened at a final concentration of 100 uM. Compounds with more than 20% inhibition at 100 uM were then tested in dose response assays at seven concentrations, ranging from 100 uM to 0.0156 uM depending on the % inhibition for each compound in the initial 100 uM screen. To confirm that the compounds were specifically inhibiting MK and not one of the other enzymes in the assay, the compounds were tested in parallel in an assay that contained hexokinase as the enzyme instead of MK and glucose as the substrate instead of mevalonate.  None of the compounds tested inhibited in this &apos;coupling enzymes&apos; assay.</PC-AssayDescription_description_E>
+  </PC-AssayDescription_description>
+  <PC-AssayDescription_protocol>
+    <PC-AssayDescription_protocol_E>Mevalonate Kinase Protocol for 1 mL cuvet assay</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>Purified recombinant MK enzyme was provided by Dr. Thomas Leyh, Albert Einstein College of Medicine of Yeshiva University. </PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>590 uL of MK reagent mix which included NADH, mevalonate, ATP, phosphoenolpyruvate, MgCl2, KCl, pyruvate kinase, and lactate dehydrogenase in buffer was added to each UV-VIS semimicro cuvet. Compounds were then added to the cuvets in 10 uL volumes in DMSO. The reaction was initiated with the addition of 400 uL of MK, diluted in assay buffer. The final concentrations in the reaction were 0.4 mM NADH, 0.2 mM melalonate, 6 mM MgCl2, 50 mM KCl, 5 mM ATP, 2 mM potassium phosphoenolpyruvate, 3 units/mL each of rabbit muscle pyruvate kinase and rabbit muscle lactate dehydrogenase, 1% DMSO, and 60 nM Mevalonate Kinase (MK) diluted in 50 mM HEPES buffer (pH 7.8) in a final volume of 1000 uL. The cuvets were immediately transferred to a CARY 3E UV-Visible Spectrophotometer and absorbance was measured at 340 nm for 3 minutes.  Each compound was tested in triplicate for the initial 100 uM screen and for the dose response assays each concentration was in triplicate.  Full reaction controls were assays with 10 uL of DMSO added instead of compound.  Background controls were assays in which 400 uL of assay buffer was added instead of MK.  </PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>The &apos;coupling enzyme&apos; assays were performed as above by replacing MK with hexokinase and mevalonate with glucose.</PC-AssayDescription_protocol_E>
+  </PC-AssayDescription_protocol>
+  <PC-AssayDescription_comment>
+    <PC-AssayDescription_comment_E>Percent inhibition in the single dose assay was determined by comparing the reaction rates of the compounds to that of the rate for the full reaction after subtracting the background rate using the following equation: </PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E></PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E>% Inhib = 100*(1-((cmpd rate-bkgrd rate)/ (full rx rate-bkgrd rate))) </PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E></PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E>Dose response curves were analyzed using the four parameter logistic formula in SigmaPlot Enzyme Kinetics software.</PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E> </PC-AssayDescription_comment_E>
+    <PC-AssayDescription_comment_E>In this confirmatory dose response screen active compounds were scored on a scale of 41-80 using an inverted linear correlation to EC50s between 0 and 40 uM. Compounds that did not confirm as actives in the dose response screen were given the score 0. </PC-AssayDescription_comment_E>
+  </PC-AssayDescription_comment>
+  <PC-AssayDescription_xref>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_taxonomy>373153</PC-XRefData_taxonomy>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_gene>4442084</PC-XRefData_gene>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>555</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>557</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>539</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>549</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>556</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>560</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+  </PC-AssayDescription_xref>
+  <PC-AssayDescription_results>
+    <PC-ResultType>
+      <PC-ResultType_tid>1</PC-ResultType_tid>
+      <PC-ResultType_name>IC50</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="none">254</PC-ResultType_unit>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>2</PC-ResultType_tid>
+      <PC-ResultType_name>IC50 StdDev</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="none">254</PC-ResultType_unit>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>3</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 1</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>100</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>4</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 2</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>40</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>5</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 3</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>25</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>6</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 4</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>20</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>7</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 5</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>12.5</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>8</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 6</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>10</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>9</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 7</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>8</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>10</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 8</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>6.25</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>11</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 9</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>5</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>12</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 10</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>4</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>13</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>3.125</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>14</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 11</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>2.5</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>15</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 12</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>2</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>16</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 13</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>1.25</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>17</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 14</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>1</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>18</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 15</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.625</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>19</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 16</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.5</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>20</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 17</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.312999993562698</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>21</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 18</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.25</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>22</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 19</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.156000003218651</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>23</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 20</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.125</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>24</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 21</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.063000001013279</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>25</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 22</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.0309999994933605</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>26</PC-ResultType_tid>
+      <PC-ResultType_name>Inhibition 23</PC-ResultType_name>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+      <PC-ResultType_tc>
+        <PC-ConcentrationAttr>
+          <PC-ConcentrationAttr_concentration>0.0160000007599592</PC-ConcentrationAttr_concentration>
+          <PC-ConcentrationAttr_unit value="um">5</PC-ConcentrationAttr_unit>
+          <PC-ConcentrationAttr_dr-id>1</PC-ConcentrationAttr_dr-id>
+        </PC-ConcentrationAttr>
+      </PC-ResultType_tc>
+    </PC-ResultType>
+    <PC-ResultType>
+      <PC-ResultType_tid>27</PC-ResultType_tid>
+      <PC-ResultType_name>Verification</PC-ResultType_name>
+      <PC-ResultType_type value="string">4</PC-ResultType_type>
+    </PC-ResultType>
+  </PC-AssayDescription_results>
+  <PC-AssayDescription_revision>2</PC-AssayDescription_revision>
+  <PC-AssayDescription_target>
+    <PC-AssayTargetInfo>
+      <PC-AssayTargetInfo_name>mevalonate kinase [Streptococcus pneumoniae D39]</PC-AssayTargetInfo_name>
+      <PC-AssayTargetInfo_mol-id>116516899</PC-AssayTargetInfo_mol-id>
+      <PC-AssayTargetInfo_molecule-type value="protein">1</PC-AssayTargetInfo_molecule-type>
+      <PC-AssayTargetInfo_organism>
+        <BioSource>
+          <BioSource_org>
+            <Org-ref>
+              <Org-ref_taxname>Streptococcus pneumoniae D39</Org-ref_taxname>
+              <Org-ref_db>
+                <Dbtag>
+                  <Dbtag_db>taxon</Dbtag_db>
+                  <Dbtag_tag>
+                    <Object-id>
+                      <Object-id_id>373153</Object-id_id>
+                    </Object-id>
+                  </Dbtag_tag>
+                </Dbtag>
+              </Org-ref_db>
+            </Org-ref>
+          </BioSource_org>
+        </BioSource>
+      </PC-AssayTargetInfo_organism>
+    </PC-AssayTargetInfo>
+  </PC-AssayDescription_target>
+  <PC-AssayDescription_activity-outcome-method value="confirmatory">2</PC-AssayDescription_activity-outcome-method>
+  <PC-AssayDescription_dr>
+    <PC-AssayDRAttr>
+      <PC-AssayDRAttr_id>1</PC-AssayDRAttr_id>
+      <PC-AssayDRAttr_descr>CR Plot Labels 1</PC-AssayDRAttr_descr>
+      <PC-AssayDRAttr_dn>Concentration</PC-AssayDRAttr_dn>
+      <PC-AssayDRAttr_rn>Response</PC-AssayDRAttr_rn>
+    </PC-AssayDRAttr>
+  </PC-AssayDescription_dr>
+  <PC-AssayDescription_project-category value="mlscn">1</PC-AssayDescription_project-category>
+</PC-AssayDescription>
+
+
