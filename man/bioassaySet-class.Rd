@@ -13,7 +13,7 @@ Objects can be created with several functions including \code{getAssays} and \co
 }
 \section{Slots}{
   \describe{
-    \item{\code{activity}:}{Object of class \code{"dgCMatrix"} a binary sparse matrix of assays vs compounds where 0 represents untested, NA represents inconclusive, 1 represents inactive, and 2 represents activity }
+    \item{\code{activity}:}{Object of class \code{"dgCMatrix"} a sparse matrix of assays vs compounds where 0 represents untested, NA represents inconclusive, 1 represents inactive, and 2 represents activity }
     \item{\code{scores}:}{Object of class \code{"dgCMatrix"} numeric activity scores }
     \item{\code{targets}:}{Object of class \code{"dgCMatrix"} a matrix of the targets for each aid listed in the activity and scores matrix }
     \item{\code{sources}:}{Object of class \code{"data.frame"} data sources for each assay }
