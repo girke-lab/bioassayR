@@ -48,7 +48,7 @@ inactiveTargets <- function(database, cid) {
     queryResult <- .targetsByCid(database, cid, activity = 0) 
     if(nrow(queryResult) == 0){ return (NA) }
     inactiveTargets <- table(queryResult[,3])
-    inactiveTargets <- as.data.frame(inactiveTargets, row.names=(names(inactiveTargets)))[1:10,2, drop=FALSE]
+    inactiveTargets <- as.data.frame(inactiveTargets, row.names=(names(inactiveTargets)))[,2, drop=FALSE]
     colnames(inactiveTargets) <- "inactive screens"
     return(inactiveTargets)
 }
