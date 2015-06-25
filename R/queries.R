@@ -131,33 +131,54 @@ selectiveAgainst <- function(database, target, maxCompounds = 10, minimumTargets
 # this takes a bioassaySet of multiple assays, and returns one with a single score
 # per target- collapsing multiple assays against distinct targets into a single assay
 # values:
-#   0 = inactive OR untested
-#   1 = active in 1 or more assays (can still be inactive in some)
-perTargetMatrix <- function(assays){
+#   0 = untested or inconclusive
+#   1 = inactive
+#   2 = active in 1 or more assays (can still be inactive in some)
+perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE){
     # check input sanity
     if(class(assays) != "bioassaySet")
         stop("database not of class bioassaySet")
+    if(class(inactives) != "logical")
+        stop("inactives option not of class logical (TRUE or FALSE)")
+    if(! is.logical(assayTargets) && (class(assayTargets) != "character"))
+        stop("assayTargets not of class character")
+    if(is.logical(assayTargets) && isTRUE(assayTargets))
+        stop("TRUE is an invalid option for assayTargets- it must be FALSE or character")
 
-    # Get coordinates of active scores
+    message("Note: in this version active scores now use a 2 instead of a 1")
+
+    # Get coordinates of scores
+    # NOTE: inactives must come after active values
+    #   for later duplicate removal to give preference to active scores
     activityMatrix <- slot(assays, "activity")
-    activeCoords <- which(activityMatrix == 2, arr.ind=TRUE)
+    coords <- which(activityMatrix == 2, arr.ind=TRUE)
+    suppressWarnings(coords <- cbind(coords,2))
+    if(inactives){
+        inactiveCoords <- which(activityMatrix == 1, arr.ind=TRUE)
+        suppressWarnings(inactiveCoords <- cbind(inactiveCoords,1))
+        coords <- rbind(coords, inactiveCoords)
+    }
     
     # get assay to target mappings 
-    targetMatrix <- slot(assays, "targets")
-    targetCoords <- which(targetMatrix == 1, arr.ind=TRUE)
-    assayTargets <- colnames(targetMatrix)[targetCoords[,2]]
-    names(assayTargets) <- rownames(targetMatrix)[targetCoords[,1]]
+    if(is.logical(assayTargets)){
+        targetMatrix <- slot(assays, "targets")
+        targetCoords <- which(targetMatrix == 1, arr.ind=TRUE)
+        assayTargets <- colnames(targetMatrix)[targetCoords[,2]]
+        names(assayTargets) <- rownames(targetMatrix)[targetCoords[,1]]
+    }
 
     # get target/cid pairs per assay and drop those without targets
-    targetsPerAssay <- assayTargets[as.character(rownames(activityMatrix)[activeCoords[,1]])]
-    cidsPerAssay <- colnames(activityMatrix)[activeCoords[,2]]
+    targetsPerAssay <- assayTargets[as.character(rownames(activityMatrix)[coords[,1]])]
+    cidsPerAssay <- colnames(activityMatrix)[coords[,2]]
     cidsPerAssay <- cidsPerAssay[! is.na(targetsPerAssay)]
     targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)]    
+    activityScores <- coords[,3][! is.na(targetsPerAssay)]
 
     # make cid/target pairs unique
     nonDuplicates <- ! duplicated(paste(cidsPerAssay, targetsPerAssay, sep="______"))
     cidsPerAssay <- cidsPerAssay[nonDuplicates]
     targetsPerAssay <- targetsPerAssay[nonDuplicates]
+    activityScores <- activityScores[nonDuplicates]
 
     # get unique values for cols and rows
     uniqueTargets <- unique(targetsPerAssay)
@@ -167,7 +188,7 @@ perTargetMatrix <- function(assays){
     sparseMatrix(
         i = match(targetsPerAssay, uniqueTargets),
         j = match(cidsPerAssay, uniqueCids),
-        x = 1,
+        x = activityScores,
         dims = c(length(uniqueTargets), length(uniqueCids)),
         dimnames = list(uniqueTargets, uniqueCids),
         symmetric = FALSE,
