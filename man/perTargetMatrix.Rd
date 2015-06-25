@@ -4,18 +4,26 @@
 Collapse a \code{bioassaySet} object from multiple assays by combining assays with a common target
 }
 \description{
-Creates a binary \code{sparseMatrix} object which has an activity value for each distinct target identifier rather than each distinct assay. If any assay for a given target vs compound combination shows active, this combination will be marked active in the resulting object.
+Creates a binary \code{sparseMatrix} object which has an activity value for each distinct target identifier rather than each distinct assay. Active scores always take preference over inactives: if any assay for a given target vs compound combination shows active, this combination will be marked active in the resulting object.
+This function is not designed for single assays with multiple targets, and if they are present only one of the targets will be considered.
 }
 \usage{
-perTargetMatrix(assays)
+perTargetMatrix(assays, inactives = FALSE, assayTargets = FALSE)
 }
 \arguments{
   \item{assays}{
 A \code{bioassaySet} object with data from multiple assays, some of which may share a common target.
 }
+  \item{inactives}{
+    Include both active and inactive scores. If FALSE only active scores are returned.
+  }
+  \item{assayTargets}{
+      Provide a custom merge table of target identifiers for each assay. For example, if you have clustered the targets of many assays into bins you can here merge by common clusters instead of distinct targets. This must be vector of class \code{character} with names that correspond to your assay ids (aids) and values that correspond to desired targets or clusteres in the resulting matrix. Names and targets should be represented as a character, even if they are numeric names.
+      Note that if an assay contains multiple targets, only the first is used.
+  }
 }
 \value{
-A \code{sparseMatrix} which contains a value of 1 for each target vs compound combination which shows activity in at least one parent assay.
+A \code{sparseMatrix} which contains a value of 2 for each target vs compound combination which shows activity in at least one parent assay, a value of 1 for inactive combinations, and a value of zero for untested or ambiguous values. Note that this is different from older versions of bioassayR (1.6 and older) which used to return a value of 1 for actives and did not have the option to process inactives.
 }
 \author{
 Tyler William H Backman
@@ -31,7 +39,7 @@ assays <- getAssays(sampleDB, c("673509","103","105"))
 assays
 
 ## collapse assays into perTargetMatrix
-targetMatrix <- perTargetMatrix(assays)
+targetMatrix <- perTargetMatrix(assays, inactives=TRUE)
 targetMatrix
 
 ## disconnect from sample database
