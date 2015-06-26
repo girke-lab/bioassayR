@@ -8,7 +8,7 @@ Creates a binary \code{sparseMatrix} object which has an activity value for each
 This function is not designed for single assays with multiple targets, and if they are present only one of the targets will be considered.
 }
 \usage{
-perTargetMatrix(assays, inactives = FALSE, assayTargets = FALSE)
+perTargetMatrix(assays, inactives = FALSE, assayTargets = FALSE, targetOrder = FALSE)
 }
 \arguments{
   \item{assays}{
@@ -20,6 +20,9 @@ A \code{bioassaySet} object with data from multiple assays, some of which may sh
   \item{assayTargets}{
       Provide a custom merge table of target identifiers for each assay. For example, if you have clustered the targets of many assays into bins you can here merge by common clusters instead of distinct targets. This must be vector of class \code{character} with names that correspond to your assay ids (aids) and values that correspond to desired targets or clusteres in the resulting matrix. Names and targets should be represented as a character, even if they are numeric names.
       Note that if an assay contains multiple targets, only the first is used.
+  }
+  \item{targetOrder}{
+      An optional \code{character} vector of desired target names in order. This will become the row names in the resulting sparse matrix in exact order, making it possible to coherently bind together sparse matricies of different compounds. If a target is omitted from this list it will be dropped in the result, and if an extra target is included it will show up with all '0' (untested) entries. 
   }
 }
 \value{
