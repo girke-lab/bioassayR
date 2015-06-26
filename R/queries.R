@@ -148,7 +148,7 @@ assaySetTargets <- function(assays){
 #   0 = untested or inconclusive
 #   1 = inactive
 #   2 = active in 1 or more assays (can still be inactive in some)
-perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE){
+perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, targetOrder = FALSE){
     # check input sanity
     if(class(assays) != "bioassaySet")
         stop("database not of class bioassaySet")
@@ -156,8 +156,12 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE){
         stop("inactives option not of class logical (TRUE or FALSE)")
     if(! is.logical(assayTargets) && (class(assayTargets) != "character"))
         stop("assayTargets not of class character")
-    if(is.logical(assayTargets) && isTRUE(assayTargets))
-        stop("TRUE is an invalid option for assayTargets- it must be FALSE or character")
+    if(is.logical(targetOrder) && isTRUE(targetOrder))
+        stop("TRUE is an invalid option for targetOrder- it must be FALSE or character")
+    if(! is.logical(targetOrder) && (class(targetOrder) != "character"))
+        stop("targetOrder not of class character")
+    if(is.logical(targetOrder) && isTRUE(targetOrder))
+        stop("TRUE is an invalid option for targetOrder- it must be FALSE or character")
 
     message("Note: in this version active scores now use a 2 instead of a 1")
 
@@ -192,7 +196,15 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE){
     activityScores <- activityScores[nonDuplicates]
 
     # get unique values for cols and rows
-    uniqueTargets <- unique(targetsPerAssay)
+    if(is.logical(targetOrder)){
+        uniqueTargets <- unique(targetsPerAssay)
+    } else {
+        uniqueTargets <- targetOrder
+        inTargetList <- targetsPerAssay %in% targetOrder
+        targetsPerAssay <- targetsPerAssay[inTargetList]
+        cidsPerAssay <- cidsPerAssay[inTargetList]
+        activityScores <- activityScores[inTargetList]
+    }
     uniqueCids <- unique(cidsPerAssay)
     
     # return matrix
