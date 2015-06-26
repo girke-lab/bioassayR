@@ -186,8 +186,8 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, tar
     targetsPerAssay <- assayTargets[as.character(rownames(activityMatrix)[coords[,1]])]
     cidsPerAssay <- colnames(activityMatrix)[coords[,2]]
     cidsPerAssay <- cidsPerAssay[! is.na(targetsPerAssay)]
-    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)]    
     activityScores <- coords[,3][! is.na(targetsPerAssay)]
+    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)]    
 
     # make cid/target pairs unique
     nonDuplicates <- ! duplicated(paste(cidsPerAssay, targetsPerAssay, sep="______"))
