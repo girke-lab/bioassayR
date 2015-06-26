@@ -128,7 +128,21 @@ selectiveAgainst <- function(database, target, maxCompounds = 10, minimumTargets
     return(targetSums)
 }
 
-# this takes a bioassaySet of multiple assays, and returns one with a single score
+# This takes a bioassaySet of multiple assays and returns
+# a vector of the targets of each, with the assay identifiers themselves (aids)
+# as names. If a single assay contains multiple targets, these will all be listed.
+assaySetTargets <- function(assays){
+    # check input sanity
+    if(class(assays) != "bioassaySet")
+        stop("database not of class bioassaySet")
+    targetMatrix <- slot(assays, "targets")
+    targetCoords <- which(targetMatrix == 1, arr.ind=TRUE)
+    assayTargets <- colnames(targetMatrix)[targetCoords[,2]]
+    names(assayTargets) <- rownames(targetMatrix)[targetCoords[,1]]
+    return(assayTargets)
+}
+
+# This takes a bioassaySet of multiple assays, and returns one with a single score
 # per target- collapsing multiple assays against distinct targets into a single assay
 # values:
 #   0 = untested or inconclusive
@@ -161,10 +175,7 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE){
     
     # get assay to target mappings 
     if(is.logical(assayTargets)){
-        targetMatrix <- slot(assays, "targets")
-        targetCoords <- which(targetMatrix == 1, arr.ind=TRUE)
-        assayTargets <- colnames(targetMatrix)[targetCoords[,2]]
-        names(assayTargets) <- rownames(targetMatrix)[targetCoords[,1]]
+        assayTargets <- assaySetTargets(assays)
     }
 
     # get target/cid pairs per assay and drop those without targets
