@@ -40,5 +40,6 @@ export(
     "targetSelectivity",
     "screenedAtLeast",
     "loadIdMapping",
-    "translateTargetId"
+    "translateTargetId",
+    "assaySetTargets"
 )
