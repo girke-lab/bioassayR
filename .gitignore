@@ -1,16 +1,7 @@
 .vagrant/*
 *.Rhistory
-*.RData
 *.pyc
 *~
 *.swp
 *.DS_Store
-vignettes/bioassayR-clusterResult.pdf
-vignettes/bioassayR-concordance.tex
-vignettes/bioassayR-plotstruct.pdf
-vignettes/bioassayR.bbl
-vignettes/bioassayR.log
-vignettes/bioassayR.pdf
-vignettes/bioassayR.synctex.gz
-vignettes/bioassayR.tex
-vignettes/bioassayR.toc
+vignettes/bioassayR_cache
