@@ -1,5 +1,44 @@
-# takes a cid and returns a table of the proteins it shows activity against
-activeTargets <- function(database, cid) {
+# lists all CIDS present in a BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) object
+allCids <- function(inputObject, activesOnly = FALSE){
+    if(class(activesOnly) != "logical")
+        stop("activesOnly not of class logical (TRUE / FALSE)")
+    if(class(inputObject) == "BioassayDB"){
+        return(.allCids(inputObject, activesOnly)[[1]])
+    } else if(class(inputObject) == "bioassay"){
+        if(activesOnly)
+            return(unique(slot(inputObject, "scores")$cid[slot(inputObject, "scores")$activity == 1]))
+        else
+            return(unique(slot(inputObject, "scores")$cid))
+    } else if(class(inputObject) == "bioassaySet"){
+        if(activesOnly)
+            return(unique(colnames(slot(inputObject, "activity"))[which(slot(inputObject, "activity") == 2, arr.ind=T)[,2]]))
+        else
+            return(unique(colnames(slot(inputObject, "activity"))))
+    } else if(class(inputObject) == "dgCMatrix"){
+        if(activesOnly)
+            return(unique(colnames(inputObject)[which(inputObject == 2, arr.ind=T)[,2]]))
+        else
+            return(unique(colnames(inputObject)))
+    } else
+        stop("inputObject not of BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) class")
+}
+
+# lists all Target IDs present in a BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) object
+allTargets <- function(inputObject){
+    if(class(inputObject) == "BioassayDB"){
+        return(.allTargets(inputObject)[[1]])
+    } else if(class(inputObject) == "bioassay"){
+        return(unique(slot(inputObject, "targets")))
+    } else if(class(inputObject) == "bioassaySet"){
+        return(unique(colnames(slot(inputObject, "targets"))))
+    } else if(class(inputObject) == "dgCMatrix"){
+        return(unique(rownames(inputObject)))
+    } else
+        stop("inputObject not of BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) class")
+}
+
+# takes a cid and returns a table of the targets it shows activity against
+activeTargets <- function(database, cid){
     if(class(database) != "BioassayDB")
         stop("database not of class BioassayDB")
     if(is.numeric(cid)){
@@ -29,8 +68,8 @@ activeTargets <- function(database, cid) {
     return(resultByTarget)
 }
 
-# takes a cid and returns a table of the proteins it has been found inactive against 
-inactiveTargets <- function(database, cid) {
+# takes a cid and returns a table of the targets it has been found inactive against 
+inactiveTargets <- function(database, cid){
     if(class(database) != "BioassayDB")
         stop("database not of class BioassayDB")
     if(is.numeric(cid)){
@@ -458,6 +497,24 @@ translateTargetId <- function(database, target, category){
 # queries #
 ###########
 
+.allCids <- function(database, activesOnly = FALSE){
+    if(activesOnly){
+        queryString <- " AND activity == 1"
+    } else {
+        queryString <- ""
+    }
+    queryBioassayDB(database, paste(
+        "SELECT DISTINCT cid FROM activity WHERE cid NOT NULL",
+        queryString,
+        sep = ""
+    ))
+}
+
+.allTargets <- function(database){
+    queryBioassayDB(database,
+        "SELECT DISTINCT target FROM targets WHERE target NOT NULL")
+}
+
 .translateTargetId <- function(database, target, category){
     queryBioassayDB(database, paste(
         "SELECT identifier",
@@ -532,7 +589,6 @@ translateTargetId <- function(database, target, category){
         " NATURAL JOIN targets",
         " WHERE activity.cid = '", cid, "'",
         " AND activity.activity ", activity,
-        " AND targets.target_type = 'protein'",
         sep = ""
     ))
 }
@@ -553,16 +609,3 @@ translateTargetId <- function(database, target, category){
         sep = ""
     ))
 }
-
-# # Performance: uses indexes activity_cid, targets_aid
-# .countActiveTargets <- function(database, cid) {
-#     queryBioassayDB(database, paste(
-#         "SELECT COUNT(DISTINCT targets.target)",
-#         " FROM activity",
-#         " NATURAL JOIN targets",
-#         " WHERE activity.cid = '", cid, "'",
-#         " AND activity.activity = '1'",
-#         " AND targets.target_type = 'protein'",
-#         sep = ""
-#     ))
-# }
