@@ -1,10 +1,20 @@
-% bioassayR
-% Tyler Backman, Thomas Girke 
-% Last update: `r format(Sys.time(),"%B %d, %Y")`
+---
+title: "bioassayR Introduction and Examples" 
+author: "Authors: Tyler Backman, Thomas Girke"
+date: "Last update: `r format(Sys.time(), '%d %B, %Y')`" 
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 2
+    fig_caption: yes
+
+fontsize: 14pt
+bibliography: bibtex.bib
+---
 <!--
-\usepackage[utf8]{inputenc}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteIndexEntry{bioassayR}
+%% \VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Introduction and Examples}
+%% \VignettePackage{bioassayR}
 -->
 
 ```{r setup, include=FALSE}
@@ -15,14 +25,6 @@ cite_options(max.names=1)
 RefManageR:::BibOptions(style="markdown",no.print.fields=c("doi"))
 sapply(read.bibtex(file="bibtex.bib"),record_as_cited)
 ```
-
-bioassayR
-=========
-Tyler Backman, Thomas Girke 
-
-Last update: `r format(Sys.time(),"%B %d, %Y")`
-
-Email contact: tyler.backman@email.ucr.edu
 
 Introduction
 ============
@@ -196,6 +198,9 @@ disconnectBioassayDB(mydb)
 # delete temporary database
 unlink(myDatabaseFilename)
 ```
+
+Examples
+===================
 
 Loading User Supplied PubChem Bioassay Data
 -------------------------------------

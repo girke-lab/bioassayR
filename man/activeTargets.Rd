@@ -4,7 +4,7 @@
 Show targets against which a small molecule is active
 }
 \description{
-Returns a \code{data.frame} of the protein targets (target_type for the protein must be 'protein'), which a given small molecule (specified by cid) shows activity against. For each target, a single row shows the total number of distinct screens it participated in, and the fraction of those in which it exhibits activity.
+Returns a \code{data.frame} of the targets, which a given small molecule (specified by cid) shows activity against. For each target, a single row shows the total number of distinct screens it participated in, and the fraction of those in which it exhibits activity.
 }
 \usage{
 activeTargets(database, cid)
