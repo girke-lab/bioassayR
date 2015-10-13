@@ -1,0 +1,47 @@
+## IMPORTS
+import(DBI, RSQLite, methods, Matrix, rjson)
+importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
+importFrom("BiocGenerics", organism, "organism<-")
+
+## EXPORTS
+## S4 Classes
+exportClasses(
+    "BioassayDB",
+    "bioassay",
+    "bioassaySet"
+)
+
+## Methods
+exportMethods(
+    "queryBioassayDB", "show",
+    "aid", "source_id", "assay_type", "organism", "scoring", "targets", "target_types", "scores",
+    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-"
+)
+
+## Functions
+export(
+    "connectBioassayDB", 
+    "addDataSource", 
+    "loadBioassay", 
+    "dropBioassay", 
+    "disconnectBioassayDB", 
+    "newBioassayDB",
+    "addBioassayIndex",
+    "dropBioassayIndex",
+    "activeTargets", 
+    "inactiveTargets", 
+    "activeAgainst",
+    "selectiveAgainst",
+    "getAssay",
+    "getAssays",
+    "parsePubChemBioassay",
+    "getBioassaySetByCids",
+    "perTargetMatrix",
+    "targetSelectivity",
+    "screenedAtLeast",
+    "loadIdMapping",
+    "translateTargetId",
+    "assaySetTargets",
+    "allCids",
+    "allTargets"
+)

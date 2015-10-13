@@ -1,0 +1,7 @@
+.vagrant/*
+*.Rhistory
+*.pyc
+*~
+*.swp
+*.DS_Store
+vignettes/bioassayR_cache
