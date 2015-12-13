@@ -1,3 +1,26 @@
+# returns a ChemmineR style FPset object for a given set of cids and targets
+bioactivityFingerprint <- function(bioassaySet, targets = FALSE){
+  if(class(bioassaySet) != "bioassaySet")
+    stop("input not of class bioassaySet")
+  if(targets){
+      if(length(targets) < 1){
+        stop("target list must have at least one valid entry")  
+      }
+      if(is.numeric(targets)){
+        targets <- as.character(targets)
+      } else if(! is.character(targets)){
+        stop("targets not class numeric or character")
+      } 
+  } else {
+      targets <- allTargets(bioassaySet)
+  }
+  activityMatrix <- perTargetMatrix(bioassaySet, inactives = TRUE, targetOrder = targets)
+  binaryMatrix <- t(as.matrix(1*(activityMatrix > 1)))
+  fingerPrint <- as(binaryMatrix, "FPset")
+  slot(fingerPrint, "type") <- "bioactivity"
+  return(fingerPrint)
+}
+
 # lists all CIDS present in a BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) object
 allCids <- function(inputObject, activesOnly = FALSE){
     if(class(activesOnly) != "logical")
@@ -267,6 +290,9 @@ getBioassaySetByCids <- function(database, cids){
         cids <- as.character(cids)
     } else if(! is.character(cids)){
         stop("cids not class numeric or character")
+    }
+    if(length(unique(cids)) != length(cids)){
+        stop("cid list contains duplicates")
     }
 
     # create activity and score matrix

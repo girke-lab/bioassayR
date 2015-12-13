@@ -2,6 +2,7 @@
 import(DBI, RSQLite, methods, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
 importFrom("BiocGenerics", organism, "organism<-")
+importClassesFrom("ChemmineR", FPset)
 
 ## EXPORTS
 ## S4 Classes
@@ -43,5 +44,6 @@ export(
     "translateTargetId",
     "assaySetTargets",
     "allCids",
-    "allTargets"
+    "allTargets",
+    "bioactivityFingerprint"
 )
