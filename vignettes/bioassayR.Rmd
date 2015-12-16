@@ -82,7 +82,7 @@ mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
 Next, specify the source and version of the data you plan to load. This is a required step, which makes it easier to track the origin of your data later. Feel free to use the current date for a version number, if your data isn't versioned.
 
 ```{r eval=TRUE, tidy=FALSE}
-addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+addDataSource(mydb, description="PubChem BioAssay", version="unknown")
 ```
 
 After adding a data source, create or import a *data.frame* which contains the activity scores for each of the molecules in your assay. 
@@ -98,7 +98,7 @@ All bioactivity data is loaded into the database, or retrieved from the database
 The source id value must exactly match that loaded earlier by *addDataSource*. The molecular target(s) for the assay are optional, and an unlimited number can be specified for a single assay as a vector passed to the targets option. The target types field should be a vector of equal length, describing the type of each target in the same order.
 
 ```{r eval=TRUE, tidy=FALSE}
-myAssay <- new("bioassay",aid="1000", source_id="PubChem Bioassay",
+myAssay <- new("bioassay",aid="1000", source_id="PubChem BioAssay",
     assay_type="confirmatory", organism="unknown", scoring="activity rank", 
     targets="116516899", target_types="protein", scores=samplebioassay)
 myAssay
@@ -226,7 +226,7 @@ mydb <- newBioassayDB(myDatabaseFilename, indexed=F)
 We will also add a data source to this database, specifying that our data here mirrors an assay provided by PubChem Bioassay.
 
 ```{r eval=TRUE, tidy=FALSE}
-addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+addDataSource(mydb, description="PubChem BioAssay", version="unknown")
 ```
 
 The XML file provided by PubChem Bioassay contains extensive details on how the assay was performed, molecular targets, and results scoring methods. You can extract these using the *parsePubChemBioassay* function as follows.

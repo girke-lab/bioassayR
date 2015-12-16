@@ -28,7 +28,7 @@ extdata_dir <- system.file("extdata", package="bioassayR")
 assayDescriptionFile <- file.path(extdata_dir, "exampleAssay.xml")
 activityScoresFile <- file.path(extdata_dir, "exampleScores.csv")
 myAssay <- parsePubChemBioassay("1000", activityScoresFile, assayDescriptionFile)
-addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+addDataSource(mydb, description="PubChem BioAssay", version="unknown")
 loadBioassay(mydb, myAssay)
 
 ## delete the loaded assay

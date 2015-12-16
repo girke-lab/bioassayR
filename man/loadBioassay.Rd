@@ -35,7 +35,7 @@ activityScoresFile <- file.path(extdata_dir, "exampleScores.csv")
 myAssay <- parsePubChemBioassay("1000", activityScoresFile, assayDescriptionFile)
 
 ## load bioassay into database
-addDataSource(mydb, description="PubChem Bioassay", version="unknown")
+addDataSource(mydb, description="PubChem BioAssay", version="unknown")
 loadBioassay(mydb, myAssay)
 
 ## disconnect from and delete sample database

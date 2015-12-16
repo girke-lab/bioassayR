@@ -131,7 +131,9 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
         tempAssay <- t(data.frame(row.names=c("cid", "activity", "score")))
         tempAssay <- as.data.frame(tempAssay)
     } else {
-        tempAssay <- read.csv(textConnection(csvLines))[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+        csvLines <- textConnection(csvLines)
+        tempAssay <- read.csv(csvLines)[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+        close(csvLines)
         outcomes <- rep(NA, nrow(tempAssay))
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
@@ -151,7 +153,9 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
     }
 
     # parse xmlFile
-    xmlPointer <- xmlTreeParse(xmlFile, useInternalNodes=TRUE, addFinalizer=TRUE)
+    xmlLines <- readLines(xmlFile)
+    xmlLines <- paste(xmlLines, collapse="\n")
+    xmlPointer <- xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
     targets <- xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x")
     targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x")
     type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]]
@@ -180,7 +184,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
 
     new("bioassay",
         aid=aid,
-        source_id="PubChem Bioassay",
+        source_id="PubChem BioAssay",
         assay_type=as.character(type),
         organism=as.character(organism),
         scoring=as.character(scoring),
