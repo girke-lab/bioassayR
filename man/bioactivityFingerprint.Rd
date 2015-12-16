@@ -9,7 +9,7 @@ Returns a custom binary descriptor fingerprint for a given set of query cids and
 target compounds, based on the activity data within a \code{bioassaySet} object.
 }
 \usage{
-bioactivityFingerprint(bioassaySet, targets=FALSE)
+bioactivityFingerprint(bioassaySet, targets = FALSE, conflictResolver = "activesFirst")
 }
 \arguments{
 \item{bioassaySet}{
@@ -18,12 +18,15 @@ bioactivityFingerprint(bioassaySet, targets=FALSE)
 \item{targets}{
   An optional list of target id(s) to consider when creating the binary fingerprint. If a listed target is not in the bioassaySet, or has no active scores it will still be accepted, but create a fingerprint with all zeros for this location. The binary order of this list is preserved, so that direct comparison and combination of resulting \code{FPset} objects created with the same target list can be performed. If omitted, the target list for the \code{bioassaySet} object will be used, as returned by the \code{allTargets} function.
 }
+\item{conflictResolver}{
+    Optionally allows users to choose how replicates (multiple assays sharing common compounds and targets) are resolved if they disagree. If 'activesFirst' any active score will take precedence over an inactive. If 'mode' the resulting score will be computed according to the statistical mode using \code{as.numeric(names(which.max(table(x))))}. Users can also optionally pass a function here which (for each cid/target pair) will receive a list of '2' (active) and '1' (inactive) values, and can then return any desired number as a summary to be included in the resulting table. For a large matrix, the default option 'activesFirst' offers the lowest computational overhead.
+}
 }
 \value{
 The returned object is a standard \pkg{ChemmineR} \code{FPset} object, and
 can be used as described in the \pkg{ChemmineR} documentation. The order and number of binary bits for each compound can be set using the \code{targets} option, enabling the combination or comparison of multiple objects created with the same target list.
 If a single compound has both active and inactive scores for the same target, it will
-be represented as active.
+be resolved according to the \code{confictResolver} option.
 }
 \author{
 Tyler William H Backman
