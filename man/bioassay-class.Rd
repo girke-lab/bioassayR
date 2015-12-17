@@ -67,7 +67,7 @@ Objects can be created by calls of the form \code{new("bioassay", ...)}.
     \item{\code{target_types}:}{Object of class \code{"character"}.
         A string of text or vector of strings, representing (in the same order) the target types for each target. For example ``protein'' or ``cell.'' }
     \item{\code{scores}:}{Object of class \code{"data.frame"}
-containing the bioactivity data to be loaded. This must be a 4 column data frame, with each row representing the bioactivity results of a single molecule. The first column represents the compound id (cid), which must be a unique value for each structurally distinct molecule. The second column represents the structure id (sid) which is often used to identify distinct sources of samples of small molecules carrying a common cid and thought to be structurally identical. The third column is a binary value representing activity (1=active, 0=inactive) for the given assay. The last column represents a score, scored by the method specified with the \code{addBioassay()} function. Missing or non-applicable values in any column should be represented by a \code{NA} value. }
+containing the bioactivity data to be loaded. This must be a 3 column data frame, with each row representing the bioactivity results of a single molecule. The first column represents the compound id (cid), which must be a unique value for each structurally distinct molecule. The second column is a binary value representing activity (1=active, 0=inactive, NA=inconclusive or untested) for the given assay. The last column represents a score, scored by the method specified with the \code{addBioassay()} function. Missing or non-applicable values in any column should be represented by a \code{NA} value. }
   }
 }
 \section{Methods}{
@@ -93,6 +93,9 @@ containing the bioactivity data to be loaded. This must be a 4 column data frame
 }
 \author{
 Tyler Backman
+}
+\seealso{
+Related classes: bioassaySet, bioAssayDB. 
 }
 \examples{
 showClass("bioassay")
