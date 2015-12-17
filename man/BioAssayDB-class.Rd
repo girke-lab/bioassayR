@@ -26,6 +26,9 @@ Objects can be created by calls of the form \code{BioassayDB("datbasePath")}.
 \author{
 Tyler Backman
 }
+\seealso{
+Related classes: bioassaySet, bioassay. 
+}
 \examples{
 showClass("BioassayDB")
 }

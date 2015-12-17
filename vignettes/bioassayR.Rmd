@@ -86,7 +86,7 @@ addDataSource(mydb, description="PubChem BioAssay", version="unknown")
 ```
 
 After adding a data source, create or import a *data.frame* which contains the activity scores for each of the molecules in your assay. 
-This *data.frame* must contain four columns which includes a cid (unique compound identifier) for each compound, an sid (often used to distinguish distinct samples of the same compound structure), a binary activity score (1=active, 0=inactive), and a numeric activity score.
+This *data.frame* must contain three columns which includes a cid (unique compound identifier) for each compound, a binary activity score (1=active, 0=inactive, NA=inconclusive), and a numeric activity score.
 Consult the *bioassay* man page for more details on formatting this *data.frame*. The *bioassayR* package contains an example activity score data frame that can be accessed as follows:
 
 ```{r eval=TRUE, tidy=FALSE}
@@ -633,7 +633,7 @@ scoreDataFrame <- cbind(geneAnno(y), binaryCalls)
 rawScores <- as.vector(Data(xsc))
 rawScores <- rawScores[wellAnno(y) == "sample"]
 scoreDataFrame <- scoreDataFrame[wellAnno(y) == "sample",]
-activityTable <- cbind(cid=scoreDataFrame[,1], sid=scoreDataFrame[,1], 
+activityTable <- cbind(cid=scoreDataFrame[,1], 
      activity=scoreDataFrame[,2], score=rawScores)
 activityTable <- as.data.frame(activityTable)
 activityTable[1:10,]
