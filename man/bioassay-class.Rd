@@ -102,7 +102,8 @@ showClass("bioassay")
 
 ## create a new bioassay object from sample data
 data(samplebioassay)
-myassay <- new("bioassay",aid="1000", source_id="test", targets="116516899", target_types="protein", scores=samplebioassay)
+myassay <- new("bioassay",aid="1000", source_id="test", targets="116516899", 
+    target_types="protein", scores=samplebioassay)
 myassay
 }
 \keyword{classes}

@@ -29,13 +29,29 @@ sapply(read.bibtex(file="bibtex.bib"),record_as_cited)
 Introduction
 ============
 
-*bioassayR* is a flexible computational tool for statistical analysis of biological screening data. It allows users to store, organize, and
-systematically analyze data from a large number of small molecule bioactivity experiments. 
+*bioassayR* is a tool for cross-target analysis of biological screening data. It allows users to store, organize, and
+systematically analyze data from a large number of small molecule bioactivity experiments of heterogenous design. 
 Users have the option of supplying their own bioactivity
 data for analysis, or downloading a database from the authors website (<http://chemmine.ucr.edu/bioassayr>) pre-loaded with bioactivity data sourced from NCBI PubChem Bioassay `r citep(c("Backman2011a","Wang:2012hj"))`.
-The pre-loaded database contains the results of hundreds of thousands of bioassay experiments, where small molecules were screened against a defined biological target.
-*bioassayR* allows users to powerfully leverage these data as a reference to 
+The pre-loaded database contains the results of thousands of bioassay experiments, where small molecules were screened against a defined biological target.
+*bioassayR* allows users to leverage these data as a reference to 
 identify small molecules active against a protein or organism of interest, identify target selective compounds that may be useful as drugs or chemical genomics probes, and identify and compare the activity profiles of small molecules.
+
+The design of bioassayR is based around four distinct objects, each which
+is optimized for investigating bioactivity data in different ways.
+The *bioassay* object stores activity data for a single assay, and also acts as
+a gateway for importing new activity data, and editing the data for a single assay.
+The *bioassayDB* object uses a SQL database to store and query thousands of
+assays, in a time-efficient manner. Often users will wish to further investigate
+a set of compounds or assays identified with a *bioassayDB* query by pulling
+them out into a *bioassaySet* object. The *bioassaySet*
+object stores activity data as a compound vs assay matrix, and can be created 
+from a list of assay ids or compounds of interest. Lastly, the *perTargetMatrix* 
+is a matrix of compounds vs targets, where replicates (assays hitting the same
+target) from a *bioassaySet* object are summarized into a single value. 
+This internally uses a sparse matrix
+to save system memory, while allowing the user to leverage R language matrix features to
+further investigate these data.
 
 Getting Started
 ===================
@@ -166,26 +182,6 @@ the *loadIdMapping* function.
 
 ```{r eval=TRUE, tidy=FALSE}
 translateTargetId(mydb, target="116516899", category="UniProt")
-```
-
-While many pre-built queries are provided (see other examples and man pages) 
-advanced users can also build their own SQL queries. First you will want to see the structure
-of the database as follows:
-
-```{r eval=TRUE, tidy=FALSE}
-queryBioassayDB(mydb, "SELECT * FROM sqlite_master WHERE type='table'")
-```
-
-As this is a SQLite database, you can consult <http://www.sqlite.org> for specifics on building SQL queries. For example, you can find all assays a given compound has participated in as follows:
-
-```{r eval=TRUE, tidy=FALSE}
-queryBioassayDB(mydb, "SELECT DISTINCT(aid) FROM activity WHERE cid = '16749979'")
-```
-
-This example prints the first 10 activity scores from a specified assay:
-
-```{r eval=TRUE, tidy=FALSE}
-queryBioassayDB(mydb, "SELECT * FROM activity WHERE aid = '1000' LIMIT 10")
 ```
 
 Lastly, disconnecting from the database after analysis reduces the chances of data corruption. If you are using a pre-built database in read only mode (as demonstrated in the Prebuilt Database Example section) you can optionally skip this step, as only writable databases are prone to corruption from failure to disconnect.
@@ -387,17 +383,16 @@ uniProtIds <- lapply(row.names(drugTargets), translateTargetId, database=pubChem
 uniProtIds <- sapply(uniProtIds, function(x) x[1])
 ```
 
-Next, we connect to UniProt via biomaRt to obtain the gene name,
-organism name, and protein name for each of these targets. For more information,
+Next, we connect to Ensembl via biomaRt to obtain a description for each
+target that is a *Homo sapiens* gene. For more information,
 consult the *biomaRt* documentation. After retrieving these data, we call the
 *match* function to ensure they are in the same order as the query data.
 
 ```{r eval=FALSE, tidy=FALSE}
 library(biomaRt)
-unimart <- useMart("unimart")
-uniprot <- useDataset("uniprot", mart=unimart)
-proteinDetails <- getBM(attributes=c("accession", "gene_name", "organism", "protein_name"), filters=c("accession"), mart=uniprot, values=uniProtIds)
-proteinDetails <- proteinDetails[match(uniProtIds, proteinDetails$accession),]
+ensembl <- useEnsembl(biomart="ensembl",dataset="hsapiens_gene_ensembl")
+proteinDetails <- getBM(attributes=c("description","uniprot_swissprot","external_gene_name"), filters=c("uniprot_swissprot"), mart=ensembl, values=uniProtIds)
+proteinDetails <- proteinDetails[match(uniProtIds, proteinDetails$uniprot_swissprot),]
 ```
 
 ```{r eval=TRUE, echo=FALSE, message=FALSE}
@@ -407,28 +402,30 @@ proteinDetails <- proteinDetails[match(uniProtIds, proteinDetails$accession),]
 cacheFileName <- "getBM.RData"
 if(! file.exists(cacheFileName)){
     library(biomaRt)
-    unimart <- useMart("unimart")
-    uniprot <- useDataset("uniprot", mart=unimart)
-    proteinDetails <- getBM(attributes=c("accession", "gene_name", "organism", "protein_name"), filters=c("accession"), mart=uniprot, values=uniProtIds)
-    proteinDetails <- proteinDetails[match(uniProtIds, proteinDetails$accession),]
+    ensembl <- useEnsembl(biomart="ensembl",dataset="hsapiens_gene_ensembl")
+    proteinDetails <- getBM(attributes=c("description","uniprot_swissprot","external_gene_name"), filters=c("uniprot_swissprot"), mart=ensembl, values=uniProtIds)
+    proteinDetails <- proteinDetails[match(uniProtIds, proteinDetails$uniprot_swissprot),]
     save(list=c("proteinDetails"), file=cacheFileName)
 }
 load(cacheFileName)
 ```
 
-Now we can view this annotation data.
+Now we can view this annotation data. NAs represent proteins not found
+on the *Homo sapiens* Ensembl, which may be from other species.
 
 ```{r eval=TRUE, tidy=FALSE}
 proteinDetails
 ```
 
-Last, let's again look at our active target list, with the annotation alongside.
+Lastly, let's again look at our active target list, with the annotation alongside.
 Note, these only match up in length and order because in the above code
 we removed all but one UniProt ID for each target protein, and then reordered
 the biomaRt results with the *match* function to get them in the correct order.
 
 ```{r eval=TRUE, tidy=FALSE}
-cbind(proteinDetails[,3:4], drugTargets)
+drugTargets <- drugTargets[! is.na(proteinDetails[,1]),]
+proteinDetails <- proteinDetails[!is.na(proteinDetails[,1]),]
+cbind(proteinDetails, drugTargets)
 ```
 
 Identify Target Selective Compounds
@@ -528,13 +525,19 @@ selectedAssayData <- getBioassaySetByCids(sampleDB, compoundsOfInterest)
 selectedAssayData
 ```
 
-The function *perTargetMatrix* converts the activity data extracted earlier into a matrix of targets (rows) vs compounds (columns). Data from multiple assays hitting the same target is summarized by giving a "2" (active) if any of these data are active. Inactive combinations can optionally be included
-as "1" values by passing the option inactives = T. Untested combinations are assigned zeros to create a "complete matrix." Here a sparse matrix (which omits actually storing 0 values) is used to save memory.
+The function *perTargetMatrix* converts the activity data extracted earlier into a matrix of targets (rows) vs compounds (columns). Data from multiple assays hitting the same target are summarized into a single value in the manner specified by the user. If you choose the *conflictResolver* option
+*activesFirst*, any active scores take prescendence over inactives. If you choose the option *mode* the most abundant of either actives or inactives
+is stored in the resulting matrix. You can also pass a custom function to decide how replicates are summarized.
+In the resulting matrix a "2" represents an active compound vs target combination, a "1" represents an inactive combination, and a "0" represents
+an untested or inconclusive combination. Inactive results can optionally be excluded from consideration
+by passing the option inactives = FALSE. Here a sparse matrix (which omits actually storing 0 values) is used to save memory.
 In a sparse matrix a period "." entry is equal to a zero "0" entry, but is implied without
 taking extra space in memory.
 
+Here we create an activity matrix, choosing to include inactive values, and summarize replicates according to the statistical mode:
+
 ```{r eval=TRUE, tidy=FALSE}
-myActivityMatrix <- perTargetMatrix(selectedAssayData, inactives=T)
+myActivityMatrix <- perTargetMatrix(selectedAssayData, inactives=TRUE, conflictResolver = "mode")
 myActivityMatrix[1:15,] # print the first 15 rows
 ```
 
@@ -560,6 +563,40 @@ This provides a dendrogram which indicates the similarity amongst compounds acco
 transposedMatrix <- t(binaryMatrix)
 distanceMatrix <- dist(transposedMatrix)
 clusterResults <- hclust(distanceMatrix, method="average")
+plot(clusterResults)
+```
+
+A second way to compare activity profiles and cluster data is to pass
+the activity matrix to the *ChemmineR* cheminformatics library as an *FPset* (binary fingerprint) object.
+This represents the bioactivity data as a binary fingerprint (bioactivity fingerprint), which is a
+binary string for each compound, where each bit represents activity (with a 1) or inactivity (with a 0) against
+the full set of targets these compounds have shown activity against. This allows for pairwise comparison
+of the bioactivity profile among compounds.
+See the *ChemmineR* documentation at http://bioconductor.org/packages/ChemmineR/ for additional examples and details.
+
+```{r eval=TRUE, tidy=FALSE}
+library(ChemmineR)
+fpset <- bioactivityFingerprint(selectedAssayData)
+fpset
+```
+
+Perform activity profile similarity searching with the FPset object, by comparing
+the first compound to all compounds.
+
+```{r eval=TRUE, tidy=FALSE}
+fpSim(fpset[1], fpset, method="Tanimoto") 
+```
+
+Compute an all-against-all bioactivity fingerprint similarity matrix for these compounds.
+
+```{r eval=TRUE, tidy=FALSE}
+simMA <- sapply(cid(fpset), function(x) fpSim(fpset[x], fpset, sorted=FALSE, method="Tanimoto"))
+simMA
+```
+
+Convert similarity matrix to a distance matrix and perform hierarcheal clustering.
+```{r eval=TRUE, tidy=FALSE}
+clusterResults <- hclust(as.dist(1-simMA), method="single")
 plot(clusterResults)
 ```
 
@@ -673,6 +710,50 @@ disconnectBioassayDB(mydb)
 ```{r eval=TRUE, echo=FALSE}
 # delete temporary database
 unlink(myDatabaseFilename)
+```
+
+Custom SQL Queries
+-------------------------------------
+
+While many pre-built queries are provided (see other examples and man pages) 
+advanced users can also build their own SQL queries. 
+As bioassayR uses a SQLite database, you can consult <http://www.sqlite.org> for specifics on building SQL queries. 
+We also reccomend the book ``Using SQLite'' by Jay A. Kreibich.
+
+To get started first connect to a database. If you downloaded the full PubChem BioAssay
+database from the authors website, the variable *sampleDatabasePath* can be replaced with the filename of the database you downloaded, if you would like to use
+that instead of the small example version included with this software package.
+
+```{r eval=TRUE, tidy=FALSE}
+library(bioassayR)
+extdata_dir <- system.file("extdata", package="bioassayR")
+sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
+pubChemDatabase <- connectBioassayDB(sampleDatabasePath)  
+```
+
+First you will want to see the structure
+of the database as follows:
+
+```{r eval=TRUE, tidy=FALSE}
+queryBioassayDB(pubChemDatabase, "SELECT * FROM sqlite_master WHERE type='table'")
+```
+
+For example, you can find the first 10 assays a given compound has participated in as follows:
+
+```{r eval=TRUE, tidy=FALSE}
+queryBioassayDB(pubChemDatabase, "SELECT DISTINCT(aid) FROM activity WHERE cid = '2244' LIMIT 10")
+```
+
+This example prints the activity scores from a specified assay:
+
+```{r eval=TRUE, tidy=FALSE}
+queryBioassayDB(pubChemDatabase, "SELECT * FROM activity WHERE aid = '393818'")
+```
+
+Lastly, disconnecting from the database after analysis reduces the chances of data corruption. If you are using a pre-built database in read only mode (as demonstrated in the Prebuilt Database Example section) you can optionally skip this step, as only writable databases are prone to corruption from failure to disconnect.
+
+```{r eval=TRUE, tidy=FALSE}
+disconnectBioassayDB(pubChemDatabase)
 ```
 
 Version Information
