@@ -8,7 +8,8 @@ Creates a binary \code{sparseMatrix} object which has an activity value for each
 This function is not designed for single assays with multiple targets, and if they are present only one of the targets will be considered.
 }
 \usage{
-perTargetMatrix(assays, inactives = FALSE, assayTargets = FALSE, targetOrder = FALSE, conflictResolver = "activesFirst")
+perTargetMatrix(assays, inactives = TRUE, assayTargets = FALSE, 
+    targetOrder = FALSE, conflictResolver = "activesFirst")
 }
 \arguments{
   \item{assays}{

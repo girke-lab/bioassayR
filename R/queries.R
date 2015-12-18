@@ -212,7 +212,7 @@ assaySetTargets <- function(assays){
 #   0 = untested or inconclusive
 #   1 = inactive
 #   2 = active in 1 or more assays (can still be inactive in some)
-perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, targetOrder = FALSE, conflictResolver = "activesFirst"){
+perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targetOrder = FALSE, conflictResolver = "activesFirst"){
     # check input sanity
     if(class(assays) != "bioassaySet")
         stop("database not of class bioassaySet")

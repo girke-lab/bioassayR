@@ -12,7 +12,6 @@ This is sample bioactivity data, taken from assay identifier (aid) 1000 in the N
   A data frame with activity scores for 4 distinct compounds.
   \describe{
     \item{\code{cid}}{unique compound identifer}
-    \item{\code{sid}}{structure identifier}
     \item{\code{activity}}{1=active, 0=inactive, NA=other}
     \item{\code{score}}{activity scores}
   }
@@ -26,7 +25,8 @@ http://pubchem.ncbi.nlm.nih.gov NCBI Pubchem
 \examples{
 ## create a new bioassay object from these sample data 
 data(samplebioassay)
-myassay <- new("bioassay",aid="1000", source_id="test", targets="116516899", target_types="protein", scores=samplebioassay)
+myassay <- new("bioassay",aid="1000", source_id="PubChem BioAssay", targets="116516899", 
+    target_types="protein", scores=samplebioassay)
 myassay
 }
 \keyword{datasets}
