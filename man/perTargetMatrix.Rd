@@ -9,7 +9,7 @@ This function is not designed for single assays with multiple targets, and if th
 }
 \usage{
 perTargetMatrix(assays, inactives = TRUE, assayTargets = FALSE, 
-    targetOrder = FALSE, conflictResolver = "activesFirst")
+    targetOrder = FALSE, summarizeReplicates = "activesFirst")
 }
 \arguments{
   \item{assays}{
@@ -25,7 +25,7 @@ A \code{bioassaySet} object with data from multiple assays, some of which may sh
   \item{targetOrder}{
       An optional \code{character} vector of desired target names in order. This will become the row names in the resulting sparse matrix in exact order, making it possible to coherently bind together sparse matricies of different compounds. If a target is omitted from this list it will be dropped in the result, and if an extra target is included it will show up with all '0' (untested) entries. 
   }
-  \item{conflictResolver}{
+  \item{summarizeReplicates}{
     Optionally allows users to choose how replicates (multiple assays sharing common compounds and targets) are resolved if they disagree. If 'activesFirst' any active score will take precedence over an inactive. If 'mode' the resulting score will be computed according to the statistical mode using \code{as.numeric(names(which.max(table(x))))}. Users can also optionally pass a function here which (for each cid/target pair) will receive a vector of '2' (active) and '1' (inactive) values, and can then return any desired number as a summary to be included in the resulting table. For a large matrix, the default option 'activesFirst' offers the lowest computational overhead.
   }
 }
