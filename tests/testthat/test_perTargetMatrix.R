@@ -42,7 +42,7 @@ test_that("mode matrix is correct", {
         dimnames=list(c(100,200), c(1,3,4,5,6,7)))
 
     targetMatrix <- perTargetMatrix(sample_bioassaySet, inactives = T,
-                                    conflictResolver = "mode")
+                                    summarizeReplicates = "mode")
     expect_equal(targetMatrix, expectedTargetMatrix)
 })
 
@@ -58,6 +58,6 @@ test_that("activesFirst matrix is correct", {
         dimnames=list(c(100,200), c(1,3,4,5,6,7)))
 
     targetMatrix <- perTargetMatrix(sample_bioassaySet, inactives = T,
-                                    conflictResolver = "activesFirst")
+                                    summarizeReplicates = "activesFirst")
     expect_equal(targetMatrix, expectedTargetMatrix)
 })

@@ -525,7 +525,7 @@ selectedAssayData <- getBioassaySetByCids(sampleDB, compoundsOfInterest)
 selectedAssayData
 ```
 
-The function *perTargetMatrix* converts the activity data extracted earlier into a matrix of targets (rows) vs compounds (columns). Data from multiple assays hitting the same target are summarized into a single value in the manner specified by the user. If you choose the *conflictResolver* option
+The function *perTargetMatrix* converts the activity data extracted earlier into a matrix of targets (rows) vs compounds (columns). Data from multiple assays hitting the same target are summarized into a single value in the manner specified by the user. If you choose the *summarizeReplicates* option
 *activesFirst*, any active scores take prescendence over inactives. If you choose the option *mode* the most abundant of either actives or inactives
 is stored in the resulting matrix. You can also pass a custom function to decide how replicates are summarized.
 In the resulting matrix a "2" represents an active compound vs target combination, a "1" represents an inactive combination, and a "0" represents
@@ -537,7 +537,7 @@ taking extra space in memory.
 Here we create an activity matrix, choosing to include inactive values, and summarize replicates according to the statistical mode:
 
 ```{r eval=TRUE, tidy=FALSE}
-myActivityMatrix <- perTargetMatrix(selectedAssayData, inactives=TRUE, conflictResolver = "mode")
+myActivityMatrix <- perTargetMatrix(selectedAssayData, inactives=TRUE, summarizeReplicates = "mode")
 myActivityMatrix[1:15,] # print the first 15 rows
 ```
 
