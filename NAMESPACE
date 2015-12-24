@@ -16,7 +16,9 @@ exportClasses(
 exportMethods(
     "queryBioassayDB", "show",
     "aid", "source_id", "assay_type", "organism", "scoring", "targets", "target_types", "scores",
-    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-"
+    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-",
+    "activity", "sources", "source_id", "scoring",
+    "activity<-", "sources<-", "source_id<-", "scoring<-"
 )
 
 ## Functions
