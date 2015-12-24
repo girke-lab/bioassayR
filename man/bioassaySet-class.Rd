@@ -3,6 +3,28 @@
 \docType{class}
 \alias{bioassaySet-class}
 \alias{show,bioassaySet-method}
+\alias{activity,bioassaySet-method}
+\alias{activity<-,bioassaySet-method}
+\alias{scores,bioassaySet-method}
+\alias{scores<-,bioassaySet-method}
+\alias{targets,bioassaySet-method}
+\alias{targets<-,bioassaySet-method}
+\alias{sources,bioassaySet-method}
+\alias{sources<-,bioassaySet-method}
+\alias{source_id,bioassaySet-method}
+\alias{source_id<-,bioassaySet-method}
+\alias{assay_type,bioassaySet-method}
+\alias{assay_type<-,bioassaySet-method}
+\alias{organism,bioassaySet-method}
+\alias{organism<-,bioassaySet-method}
+\alias{scoring,bioassaySet-method}
+\alias{scoring<-,bioassaySet-method}
+\alias{target_types,bioassaySet-method}
+\alias{target_types<-,bioassaySet-method}
+\alias{activity}
+\alias{activity<-}
+\alias{sources}
+\alias{sources<-}
 
 \title{Class \code{"bioassaySet"}}
 \description{
@@ -25,7 +47,26 @@ Objects can be created with several functions including \code{getAssays} and \co
   }
 }
 \section{Methods}{
-No methods defined with class "bioassaySet" in the signature.
+  \describe{
+    \item{activity}{\code{signature(x = "bioassaySet")}: ... }
+    \item{activity<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{scores}{\code{signature(x = "bioassaySet")}: ... }
+    \item{scores<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{targets}{\code{signature(object = "bioassaySet")}: ... }
+    \item{targets<-}{\code{signature(object = "bioassaySet")}: ... }
+    \item{sources}{\code{signature(x = "bioassaySet")}: ... }
+    \item{sources<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{source_id}{\code{signature(x = "bioassaySet")}: ... }
+    \item{source_id<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{assay_type}{\code{signature(object = "bioassaySet")}: ... }
+    \item{assay_type<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{organism}{\code{signature(x = "bioassaySet")}: ... }
+    \item{organism<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{scoring}{\code{signature(x = "bioassaySet")}: ... }
+    \item{scoring<-}{\code{signature(x = "bioassaySet")}: ... }
+    \item{target_types}{\code{signature(x = "bioassaySet")}: ... }
+    \item{target_types<-}{\code{signature(x = "bioassaySet")}: ... }
+     }
 }
 \author{
 Tyler William H Backman

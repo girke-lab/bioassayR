@@ -69,8 +69,8 @@ setReplaceMethod(f="assay_type", signature="bioassay", definition=function(x, va
     return(x)
 })
 
-setMethod(f="organism", signature="bioassay", definition=function(object) {return(object@organism)})
-setReplaceMethod(f="organism", signature="bioassay", definition=function(object, value) {
+setMethod(f="organism", signature="bioassay", definition=function(x) {return(x@organism)})
+setReplaceMethod(f="organism", signature="bioassay", definition=function(x, value) {
     if(is.numeric(value)){
         value <- as.character(value)
     } else if(! is.character(value)){
@@ -83,8 +83,8 @@ setReplaceMethod(f="organism", signature="bioassay", definition=function(object,
     if(! grepl("^[a-zA-Z_0-9\\s]+$", value, perl=T))
         stop("invalid input: must contain only alphanumerics and/or whitespace") 
 
-    object@organism <- value
-    return(object)
+    x@organism <- value
+    return(x)
 })
 
 setMethod(f="scoring", signature="bioassay", definition=function(x) {return(x@scoring)})
