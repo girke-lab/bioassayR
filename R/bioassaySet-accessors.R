@@ -12,7 +12,7 @@ setMethod("show", signature=signature(
 # activity
 setMethod(f="activity", signature="bioassaySet", definition=function(x) {return(x@activity)})
 setReplaceMethod(f="activity", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "dgCMatrix")
+    if(class(value) != "dgCMatrix")
         stop("invalid input: must be of class dgCMatrix") 
     x@activity <- value
     return(x)
@@ -21,7 +21,7 @@ setReplaceMethod(f="activity", signature="bioassaySet", definition=function(x, v
 # scores
 setMethod(f="scores", signature="bioassaySet", definition=function(x) {return(x@scores)})
 setReplaceMethod(f="scores", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "dgCMatrix")
+    if(class(value) != "dgCMatrix")
         stop("invalid input: must be of class dgCMatrix") 
     x@scores <- value
     return(x)
@@ -30,7 +30,7 @@ setReplaceMethod(f="scores", signature="bioassaySet", definition=function(x, val
 # targets
 setMethod(f="targets", signature="bioassaySet", definition=function(x) {return(x@targets)})
 setReplaceMethod(f="targets", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "dgCMatrix")
+    if(class(value) != "dgCMatrix")
         stop("invalid input: must be of class dgCMatrix") 
     x@targets <- value
     return(x)
@@ -39,7 +39,7 @@ setReplaceMethod(f="targets", signature="bioassaySet", definition=function(x, va
 # sources
 setMethod(f="sources", signature="bioassaySet", definition=function(x) {return(x@sources)})
 setReplaceMethod(f="sources", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "data.frame")
+    if(class(value) != "data.frame")
         stop("invalid input: must be of class data.frame") 
     x@sources <- value
     return(x)
@@ -48,7 +48,7 @@ setReplaceMethod(f="sources", signature="bioassaySet", definition=function(x, va
 # source_id
 setMethod(f="source_id", signature="bioassaySet", definition=function(x) {return(x@source_id)})
 setReplaceMethod(f="source_id", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "integer")
+    if(class(value) != "integer")
         stop("invalid input: must be of class integer") 
     x@source_id <- value
     return(x)
@@ -57,7 +57,7 @@ setReplaceMethod(f="source_id", signature="bioassaySet", definition=function(x, 
 # assay_type
 setMethod(f="assay_type", signature="bioassaySet", definition=function(x) {return(x@assay_type)})
 setReplaceMethod(f="assay_type", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "character")
+    if(class(value) != "character")
         stop("invalid input: must be of class character") 
     x@assay_type <- value
     return(x)
@@ -66,7 +66,7 @@ setReplaceMethod(f="assay_type", signature="bioassaySet", definition=function(x,
 # organism
 setMethod(f="organism", signature="bioassaySet", definition=function(x) {return(x@organism)})
 setReplaceMethod(f="organism", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "character")
+    if(class(value) != "character")
         stop("invalid input: must be of class character") 
     x@organism <- value
     return(x)
@@ -74,8 +74,8 @@ setReplaceMethod(f="organism", signature="bioassaySet", definition=function(x, v
 
 # scoring
 setMethod(f="scoring", signature="bioassaySet", definition=function(x) {return(x@scoring)})
-setReplaceMethod(f="organism", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "character")
+setReplaceMethod(f="scoring", signature="bioassaySet", definition=function(x, value) {
+    if(class(value) != "character")
         stop("invalid input: must be of class character") 
     x@scoring <- value
     return(x)
@@ -84,7 +84,7 @@ setReplaceMethod(f="organism", signature="bioassaySet", definition=function(x, v
 # target_types
 setMethod(f="target_types", signature="bioassaySet", definition=function(x) {return(x@target_types)})
 setReplaceMethod(f="target_types", signature="bioassaySet", definition=function(x, value) {
-    if(class(x) != "character")
+    if(class(value) != "character")
         stop("invalid input: must be of class character") 
     x@target_types <- value
     return(x)
