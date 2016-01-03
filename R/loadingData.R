@@ -40,8 +40,6 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
     dbGetQuery(con, paste("CREATE TABLE assays",
         "(source_id INTEGER, aid INTEGER,",
         "assay_type TEXT, organism TEXT, scoring TEXT)"))
-    dbGetQuery(con, paste("CREATE TABLE domains",
-        "(domain TEXT, target INTEGER)"))
     dbGetQuery(con, paste("CREATE TABLE sources",
         "(source_id INTEGER PRIMARY KEY ASC,",
         "description TEXT, version TEXT)"))
