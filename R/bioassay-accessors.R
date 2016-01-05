@@ -142,8 +142,8 @@ setReplaceMethod(f="scores", signature="bioassay", definition=function(x, value)
     if(! is.data.frame(value)){
         stop("input not data frame")
     }
-    if(ncol(value) != 4){
-        stop("scores must have 4 columns")
+    if(ncol(value) != 3){
+        stop("scores must have 3 columns")
     }
 
     x@scores <- value
