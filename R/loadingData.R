@@ -122,16 +122,34 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
     aid <- as.character(aid)
 
     # parse csv
+    # note: custom CSV parser was written here to accomodate some files from PubChem that have
+    #   hard to parse unescaped commas in CSV comment lines
     csvLines <- readLines(csvFile)
     csvLines <- csvLines[! grepl("^RESULT_", csvLines)]
-    csvLines <- paste(csvLines, collapse="\n")
-    if(csvLines < 2){
+    csvLines <- csvLines[! grepl("^\\s*$", csvLines)]
+    if(length(csvLines) < 2){
         tempAssay <- t(data.frame(row.names=c("cid", "activity", "score")))
         tempAssay <- as.data.frame(tempAssay)
     } else {
-        csvLines <- textConnection(csvLines)
-        tempAssay <- read.csv(csvLines)[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
-        close(csvLines)
+        header <- strsplit(csvLines[[1]], "\\s*,\\s*")[[1]]
+        if(sum(c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE") %in% header) < 3)
+            stop("invalid header line")
+        csvLines <- csvLines[2:length(csvLines)]
+        tempAssay <- do.call(rbind, 
+            lapply(csvLines, function(line) {
+                newFields <- rep("", length(header))
+                newData <- strsplit(line, "\\s*,\\s*")[1:length(header)][[1]]
+                if(length(newData) > length(newFields)){
+                    newFields <- newData[1:length(newFields)]
+                } else {
+                    newFields[1:length(newData)] <- newData
+                }
+                return(newFields)
+            })
+        )
+        tempAssay <- as.data.frame(tempAssay, stringsAsFactors=FALSE)
+        colnames(tempAssay) <- header
+        tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
         outcomes <- rep(NA, nrow(tempAssay))
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
@@ -139,6 +157,10 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
         tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
         colnames(tempAssay) <- c("cid", "activity", "score")
+        if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
+            stop("non-integer cid")
+        if(sum(as.integer(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))
+            stop("non-integer score")
     }
 
     # handle duplicate cids
