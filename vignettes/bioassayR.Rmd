@@ -438,7 +438,7 @@ plot(structures[1:4], print=FALSE) # Plots structures to R graphics device
 ```
 
 Cluster Compounds by Activity Profile
--------------------------------------
+---------------------------------------
 
 This example demonstrates an example of clustering small molecules by similar bioactivity profiles across several distinct bioassay experiments.
 In many cases it is too cpu and memory intensive to cluster all compounds in the database, so we first pull just a subset of these data from the database into an *bioassaySet* object, and then convert that into a compounds vs targets activity matrix for subsequent clustering according to similarities in activity profile.
