@@ -22,8 +22,9 @@ test_that("example matrix is correct", {
     # check that active targets in database match
     # those in activity matrix
     for(cid in queryCids){
-        expect_equal(table(fpMatrix[cid,] == 1)[["TRUE"]], 
-                    queryBioassayDB(sampleDB, paste("SELECT COUNT(DISTINCT target) FROM activity NATURAL JOIN targets WHERE cid =", cid, " AND activity = 1"))[[1]])
+        targetVsAid <- queryBioassayDB(sampleDB, paste("SELECT aid, target FROM activity NATURAL JOIN targets WHERE cid =", cid, " AND activity = 1"))
+        targetsOnePerAssay <- unique(targetVsAid$target[! duplicated(targetVsAid$aid)])
+        expect_equal(table(fpMatrix[cid,] == 1)[["TRUE"]], length(targetsOnePerAssay))
     }
     
     ## disconnect from sample database
