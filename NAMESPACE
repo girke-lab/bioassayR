@@ -47,5 +47,6 @@ export(
     "assaySetTargets",
     "allCids",
     "allTargets",
-    "bioactivityFingerprint"
+    "bioactivityFingerprint",
+    "scaleBioassaySet"
 )

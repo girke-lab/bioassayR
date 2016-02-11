@@ -32,7 +32,7 @@ be resolved according to the \code{confictResolver} option.
 Tyler William H Backman
 }
 \seealso{
-Functions: \code{getBioassaySetByCids}, \code{getAssays}
+Functions: \code{getBioassaySetByCids}, \code{getAssays}, \code{perTargetMatrix}
 }
 \examples{
 ## connect to a test database
