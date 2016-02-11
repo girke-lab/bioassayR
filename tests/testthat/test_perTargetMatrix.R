@@ -30,7 +30,7 @@ sample_bioassaySet <- new("bioassaySet",
     scoring = character(),
     target_types = character())
 
-test_that("mode matrix is correct", {
+test_that("discrete mode matrix is correct", {
     expectedTargetMatrix <- Matrix(c(
         2,2,
         1,1,
@@ -46,7 +46,7 @@ test_that("mode matrix is correct", {
     expect_equal(targetMatrix, expectedTargetMatrix)
 })
 
-test_that("activesFirst matrix is correct", {
+test_that("discrete activesFirst matrix is correct", {
     expectedTargetMatrix <- Matrix(c(
         2,2,
         2,2,
@@ -60,4 +60,38 @@ test_that("activesFirst matrix is correct", {
     targetMatrix <- perTargetMatrix(sample_bioassaySet, inactives = T,
                                     summarizeReplicates = "activesFirst")
     expect_equal(targetMatrix, expectedTargetMatrix)
+})
+
+scaledSample_bioassaySet <- scaleBioassaySet(sample_bioassaySet)
+
+test_that("numeric Z-score activesFirst matrix is correct", {
+    expectedTargetMatrix <- Matrix(c(
+        1.78885438199983,1.5,
+        -1.78885438199983,0.912870929175277,
+        -0.447213595499958,-1.5,
+        -0.447213595499958,-0.912870929175277,
+        0.447213595499958,-0.912870929175277,
+        -0.447213595499958,0.912870929175277
+    ), ncol=6, sparse=T,
+    dimnames=list(c(200,100), c(1,5,4,3,6,7)))
+    
+    targetMatrix <- perTargetMatrix(scaledSample_bioassaySet, useNumericScores = T,
+                                    summarizeReplicates = "activesFirst")
+    expect_equal(as.matrix(targetMatrix), as.matrix(expectedTargetMatrix))
+})
+
+test_that("numeric Z-score mean matrix is correct", {
+    expectedTargetMatrix <- Matrix(c(
+        1.11803398874989,0.728217732293819,
+        -1.11803398874989,0.228217732293819,
+        0,-0.728217732293819,
+        0,-0.228217732293819,
+        0.447213595499958,-0.912870929175277,
+        -0.447213595499958,0.912870929175277
+    ), ncol=6, sparse=T,
+    dimnames=list(c(200,100), c(1,5,4,3,6,7)))
+    
+    targetMatrix <- perTargetMatrix(scaledSample_bioassaySet, useNumericScores = T,
+                                    summarizeReplicates = mean)
+    expect_equal(as.matrix(targetMatrix), as.matrix(expectedTargetMatrix))
 })
