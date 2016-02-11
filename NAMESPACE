@@ -2,6 +2,7 @@
 import(DBI, RSQLite, methods, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
 importFrom("BiocGenerics", organism, "organism<-")
+importClassesFrom("ChemmineR", FPset)
 
 ## EXPORTS
 ## S4 Classes
@@ -15,7 +16,9 @@ exportClasses(
 exportMethods(
     "queryBioassayDB", "show",
     "aid", "source_id", "assay_type", "organism", "scoring", "targets", "target_types", "scores",
-    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-"
+    "aid<-", "source_id<-", "assay_type<-", "organism<-", "scoring<-", "targets<-", "target_types<-", "scores<-",
+    "activity", "sources", "source_id", "scoring",
+    "activity<-", "sources<-", "source_id<-", "scoring<-"
 )
 
 ## Functions
@@ -43,5 +46,7 @@ export(
     "translateTargetId",
     "assaySetTargets",
     "allCids",
-    "allTargets"
+    "allTargets",
+    "bioactivityFingerprint",
+    "scaleBioassaySet"
 )

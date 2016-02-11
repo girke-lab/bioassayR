@@ -40,8 +40,6 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
     dbGetQuery(con, paste("CREATE TABLE assays",
         "(source_id INTEGER, aid INTEGER,",
         "assay_type TEXT, organism TEXT, scoring TEXT)"))
-    dbGetQuery(con, paste("CREATE TABLE domains",
-        "(domain TEXT, target INTEGER)"))
     dbGetQuery(con, paste("CREATE TABLE sources",
         "(source_id INTEGER PRIMARY KEY ASC,",
         "description TEXT, version TEXT)"))
@@ -100,7 +98,7 @@ addDataSource <- function(database, description, version){
 }
 
 # parses input files from PubChem Bioassay
-parsePubChemBioassay <- function(aid, csvFile, xmlFile){
+parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
     if(! file.exists(csvFile)){
         stop("csv file doesn't exist")
     }   
@@ -118,20 +116,66 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile){
     }
     if(! grepl("^[a-zA-Z_0-9\\s]+$", aid, perl=T))
         stop("invalid input: must contain only alphanumerics and/or whitespace")
+    if((duplicates != "drop") && (! is.logical(duplicates)))
+        stop("duplicates option is not one of the allowed values")
 
     aid <- as.character(aid)
+
     # parse csv
-    tempAssay <- read.csv(csvFile)[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
-    outcomes <- rep(NA, nrow(tempAssay))
-    outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
-    outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
-    outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Inactive"] <- 0
-    outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
-    tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
-    colnames(tempAssay) <- c("cid", "activity", "score")
+    # note: custom CSV parser was written here to accomodate some files from PubChem that have
+    #   hard to parse unescaped commas in CSV comment lines
+    csvLines <- readLines(csvFile)
+    csvLines <- csvLines[! grepl("^RESULT_", csvLines)]
+    csvLines <- csvLines[! grepl("^\\s*$", csvLines)]
+    if(length(csvLines) < 2){
+        tempAssay <- t(data.frame(row.names=c("cid", "activity", "score")))
+        tempAssay <- as.data.frame(tempAssay)
+    } else {
+        header <- strsplit(csvLines[[1]], "\\s*,\\s*")[[1]]
+        if(sum(c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE") %in% header) < 3)
+            stop("invalid header line")
+        csvLines <- csvLines[2:length(csvLines)]
+        tempAssay <- do.call(rbind, 
+            lapply(csvLines, function(line) {
+                newFields <- rep("", length(header))
+                newData <- strsplit(line, "\\s*,\\s*")[1:length(header)][[1]]
+                if(length(newData) > length(newFields)){
+                    newFields <- newData[1:length(newFields)]
+                } else {
+                    newFields[1:length(newData)] <- newData
+                }
+                return(newFields)
+            })
+        )
+        tempAssay <- as.data.frame(tempAssay, stringsAsFactors=FALSE)
+        colnames(tempAssay) <- header
+        tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+        outcomes <- rep(NA, nrow(tempAssay))
+        outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
+        outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
+        outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Inactive"] <- 0
+        outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
+        tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
+        colnames(tempAssay) <- c("cid", "activity", "score")
+        if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
+            stop("non-integer cid")
+        if(sum(as.integer(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))
+            stop("non-integer score")
+    }
+
+    # handle duplicate cids
+    if(length(unique(tempAssay$cid)) != length(tempAssay$cid)){
+        if(duplicates == "drop"){
+            warning("dropping duplicate cids")
+            tempAssay <- tempAssay[! duplicated(tempAssay$cid),,drop=FALSE]
+        } else if(! duplicates)
+            stop("duplicate cids present")
+    }
 
     # parse xmlFile
-    xmlPointer <- xmlTreeParse(xmlFile, useInternalNodes=TRUE, addFinalizer=TRUE)
+    xmlLines <- readLines(xmlFile)
+    xmlLines <- paste(xmlLines, collapse="\n")
+    xmlPointer <- xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
     targets <- xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x")
     targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x")
     type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]]
@@ -160,7 +204,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile){
 
     new("bioassay",
         aid=aid,
-        source_id="PubChem Bioassay",
+        source_id="PubChem BioAssay",
         assay_type=as.character(type),
         organism=as.character(organism),
         scoring=as.character(scoring),
@@ -211,12 +255,19 @@ loadBioassay <- function(database, bioassay){
 
     con <- slot(database, "database")
 
+    # check that aid is not already present 
+    existingAid <- queryBioassayDB(database,
+        paste("SELECT aid FROM assays",
+        " WHERE aid = '", aid(bioassay), "' LIMIT 1", sep=""))$aid
+    if(length(existingAid) != 0)
+        stop("an assay with this aid is already present in the database")
+
     # get source id
     source_int <- queryBioassayDB(database,
         paste("SELECT source_id FROM sources",
         " WHERE description = '", source_id(bioassay), "' LIMIT 1", sep=""))$source_id
     if(length(source_int) < 1){
-        stop("data source not found in database")
+        stop("data source not found in database - please load it first with addDataSource")
     }
 
     # load assay details

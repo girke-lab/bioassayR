@@ -1,10 +1,11 @@
 setMethod("show", signature=signature(
     object="BioassayDB"),
     function(object) {
-        cat("class:\t\t", class(object), "\n")
-        cat("assays:\t\t", queryBioassayDB(object, "SELECT COUNT(*) FROM assays")[[1]], "\n")
-    	cat("sources:\t", paste(queryBioassayDB(object, "SELECT description FROM sources")[[1]], sep=", "), "\n")
-        cat("writeable:\t")
+        cat("class:\t\t\t", class(object), "\n")
+        cat("assays:\t\t\t", queryBioassayDB(object, "SELECT COUNT(*) FROM assays")[[1]], "\n")
+    	cat("sources:\t\t", paste(queryBioassayDB(object, "SELECT description FROM sources")[[1]], sep=", "), "\n")
+    	cat("source versions:\t", paste(queryBioassayDB(object, "SELECT version FROM sources")[[1]], sep=", "), "\n")
+        cat("writeable:\t\t")
         if(.writeable(object)){
             cat("yes\n")
         } else {

@@ -1,0 +1,20 @@
+bioassayR bulletproof testing and design philosophy
+
+Answer these for each function before designing checks:
+In each case it better for the user to get a warning, error, or just fix silently?
+What if the input is length zero?
+What if the input is length > 1 when length 1 was expected?
+What if the input is of the wrong class?
+What if the input contains (or is only) NA, blank, or null characters?
+What if the input contains unexpected duplicates?
+What if the input contains some invalid options or queries missing from the data?
+What if the input contains only invalid options or queries missing from the data?
+
+General function design questions:
+Does the output order need to match the input order?
+Has the user been informed if the output will match input order?
+Is the functions name intuitive and unique?
+Does the function deal properly with duplicates or missing entries in the data?
+
+General class design criteria:
+Every slot must have a bi-directional access function.

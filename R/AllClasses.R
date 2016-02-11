@@ -16,7 +16,6 @@ setClass("bioassaySet", representation=representation(
     scores = "dgCMatrix",
     targets = "dgCMatrix",
     sources = "data.frame",
-    replicates = "factor",
     source_id = "integer",
     assay_type = "character",
     organism = "character",

@@ -1,3 +1,63 @@
+# centers and standardizes the numeric activity scores for
+# a bioassaySet object
+# only consideres '0' values actually encoded in the i,j,x representation
+# of the sparse matrix- omits empty '0' entries
+# these can be computationally distinguished because the sparse matrix actually returns
+# zero values it was loaded with.
+scaleBioassaySet <- function(bioassaySet, center=TRUE, scale=TRUE){
+    if(class(bioassaySet) != "bioassaySet")
+        stop("input not of class bioassaySet")    
+    if(class(center) != "logical")
+        stop("center option not of class logical (TRUE or FALSE)")
+    if(class(scale) != "logical")
+        stop("scale option not of class logical (TRUE or FALSE)")
+    
+    tMatrix <- as(bioassaySet@scores, "TsparseMatrix")
+    sortIndex <- sort(tMatrix@i, decreasing=F, index.return=T)$ix
+    i <- tMatrix@i[sortIndex]
+    j <- tMatrix@j[sortIndex]
+    x <- tMatrix@x[sortIndex]
+    
+    standardScores <- tapply(x, i, scale, center = center, scale = scale, simplify=FALSE)
+    standardScores <- do.call(c, standardScores)
+    
+    bioassaySet@scores <- sparseMatrix(
+        i = i,
+        j = j,
+        x = standardScores,
+        dims = tMatrix@Dim,
+        dimnames = tMatrix@Dimnames,
+        symmetric = FALSE,
+        index1 = FALSE)
+    
+    return(bioassaySet)
+}
+
+# returns a ChemmineR style FPset object for a given set of cids and targets
+bioactivityFingerprint <- function(bioassaySet, targets = FALSE, summarizeReplicates = "activesFirst"){
+  if(class(bioassaySet) != "bioassaySet")
+    stop("input not of class bioassaySet")
+  if(class(summarizeReplicates) != "function" && summarizeReplicates != "mode" && summarizeReplicates != "activesFirst")
+    stop("invalid conflict resolver option")
+  if(targets){
+      if(length(targets) < 1){
+        stop("target list must have at least one valid entry")  
+      }
+      if(is.numeric(targets)){
+        targets <- as.character(targets)
+      } else if(! is.character(targets)){
+        stop("targets not class numeric or character")
+      } 
+  } else {
+      targets <- allTargets(bioassaySet)
+  }
+  activityMatrix <- perTargetMatrix(bioassaySet, inactives = TRUE, targetOrder = targets, summarizeReplicates = summarizeReplicates)
+  binaryMatrix <- t(as.matrix(1*(activityMatrix > 1)))
+  fingerPrint <- as(binaryMatrix, "FPset")
+  slot(fingerPrint, "type") <- "bioactivity"
+  return(fingerPrint)
+}
+
 # lists all CIDS present in a BioassayDB, bioassay, bioassaySet, or target matrix (dgCMatrix) object
 allCids <- function(inputObject, activesOnly = FALSE){
     if(class(activesOnly) != "logical")
@@ -183,11 +243,11 @@ assaySetTargets <- function(assays){
 
 # This takes a bioassaySet of multiple assays, and returns one with a single score
 # per target- collapsing multiple assays against distinct targets into a single assay
-# values:
+# values if useNumericScores = FALSE:
 #   0 = untested or inconclusive
 #   1 = inactive
 #   2 = active in 1 or more assays (can still be inactive in some)
-perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, targetOrder = FALSE){
+perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targetOrder = FALSE, summarizeReplicates = "activesFirst", useNumericScores = FALSE){
     # check input sanity
     if(class(assays) != "bioassaySet")
         stop("database not of class bioassaySet")
@@ -201,19 +261,39 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, tar
         stop("targetOrder not of class character")
     if(is.logical(targetOrder) && isTRUE(targetOrder))
         stop("TRUE is an invalid option for targetOrder- it must be FALSE or character")
+    if(class(summarizeReplicates) != "function" && class(summarizeReplicates) != "standardGeneric")
+        if(summarizeReplicates != "mode" && summarizeReplicates != "activesFirst")
+            stop("invalid conflict resolver option")
+    if(class(useNumericScores) != "logical")
+        stop("useNumericScores option not of class logical (TRUE or FALSE)")
+    
+    # message("Note: in this version active scores now use a 2 instead of a 1")
 
-    message("Note: in this version active scores now use a 2 instead of a 1")
-
-    # Get coordinates of scores
-    # NOTE: inactives must come after active values
-    #   for later duplicate removal to give preference to active scores
-    activityMatrix <- slot(assays, "activity")
-    coords <- which(activityMatrix == 2, arr.ind=TRUE)
-    suppressWarnings(coords <- cbind(coords,2))
-    if(inactives){
-        inactiveCoords <- which(activityMatrix == 1, arr.ind=TRUE)
-        suppressWarnings(inactiveCoords <- cbind(inactiveCoords,1))
-        coords <- rbind(coords, inactiveCoords)
+    if(useNumericScores){
+        # assays <- scaleBioassaySet(getAssays(db, c(348, 360, 368))) # test code
+        activityMatrix <- assays@scores
+        tMatrix <- as(activityMatrix, "TsparseMatrix")
+        i <- tMatrix@i
+        j <- tMatrix@j
+        x <- tMatrix@x
+        x[x == "NaN"] <- 0
+        sortIndex <- sort.int(abs(x), decreasing=T, index.return=T)$ix
+        i <- i[sortIndex]
+        j <- j[sortIndex]
+        x <- x[sortIndex]
+        coords <- cbind(i+1, j+1, x)
+    } else {
+        # Get coordinates of scores
+        # NOTE: inactives must come after active values
+        #   for later duplicate removal to give preference to active scores
+        activityMatrix <- slot(assays, "activity")
+        coords <- which(activityMatrix == 2, arr.ind=TRUE)
+        suppressWarnings(coords <- cbind(coords,2))
+        if(inactives){
+            inactiveCoords <- which(activityMatrix == 1, arr.ind=TRUE)
+            suppressWarnings(inactiveCoords <- cbind(inactiveCoords,1))
+            coords <- rbind(coords, inactiveCoords)
+        }
     }
     
     # get assay to target mappings 
@@ -226,7 +306,25 @@ perTargetMatrix <- function(assays, inactives = FALSE, assayTargets = FALSE, tar
     cidsPerAssay <- colnames(activityMatrix)[coords[,2]]
     cidsPerAssay <- cidsPerAssay[! is.na(targetsPerAssay)]
     activityScores <- coords[,3][! is.na(targetsPerAssay)]
-    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)]    
+    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)] 
+    
+    if(class(summarizeReplicates) == "character")
+        if(summarizeReplicates == "mode")
+            summarizeReplicates <- function(x) { as.numeric(names(which.max(table(x)))) }
+    
+    if(class(summarizeReplicates) != "character"){
+
+        # identify cid/target pairs that are duplicated and resolve according to specified rule
+        mergedPairs <- paste(cidsPerAssay, targetsPerAssay, sep="______")
+        duplicatedPairs <- duplicated(mergedPairs) | duplicated(mergedPairs, fromLast=TRUE)
+        if(sum(duplicatedPairs) > 0){
+            pairFactor <- factor(mergedPairs[duplicatedPairs], levels=unique(mergedPairs[duplicatedPairs]))
+            splitScores <- split(activityScores[duplicatedPairs], pairFactor)
+            resolvedScores <- sapply(splitScores, summarizeReplicates)
+            firstDuplicates <- duplicated(mergedPairs, fromLast=TRUE) & !duplicated(mergedPairs)
+            activityScores[firstDuplicates] <- resolvedScores
+        }
+    }
 
     # make cid/target pairs unique
     nonDuplicates <- ! duplicated(paste(cidsPerAssay, targetsPerAssay, sep="______"))
@@ -267,6 +365,9 @@ getBioassaySetByCids <- function(database, cids){
         cids <- as.character(cids)
     } else if(! is.character(cids)){
         stop("cids not class numeric or character")
+    }
+    if(length(unique(cids)) != length(cids)){
+        stop("cid list contains duplicates")
     }
 
     # create activity and score matrix
@@ -325,7 +426,6 @@ getBioassaySetByCids <- function(database, cids){
         scores = scores,
         targets = targets,
         sources = resultSource,
-        replicates = factor(),
         source_id = source_id,
         assay_type = assay_type,
         organism = organism,
@@ -399,7 +499,6 @@ getAssays <- function(database, aids){
         scores = scores,
         targets = targets,
         sources = resultSource,
-        replicates = factor(),
         source_id = source_id,
         assay_type = assay_type,
         organism = organism,
