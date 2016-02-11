@@ -1,3 +1,38 @@
+# centers and standardizes the numeric activity scores for
+# a bioassaySet object
+# only consideres '0' values actually encoded in the i,j,x representation
+# of the sparse matrix- omits empty '0' entries
+# these can be computationally distinguished because the sparse matrix actually returns
+# zero values it was loaded with.
+scaleBioassaySet <- function(bioassaySet, center=TRUE, scale=TRUE){
+    if(class(bioassaySet) != "bioassaySet")
+        stop("input not of class bioassaySet")    
+    if(class(center) != "logical")
+        stop("center option not of class logical (TRUE or FALSE)")
+    if(class(scale) != "logical")
+        stop("scale option not of class logical (TRUE or FALSE)")
+    
+    tMatrix <- as(bioassaySet@scores, "TsparseMatrix")
+    sortIndex <- sort(tMatrix@i, decreasing=F, index.return=T)$ix
+    i <- tMatrix@i[sortIndex]
+    j <- tMatrix@j[sortIndex]
+    x <- tMatrix@x[sortIndex]
+    
+    standardScores <- tapply(x, i, scale, center = center, scale = scale, simplify=FALSE)
+    standardScores <- do.call(c, standardScores)
+    
+    bioassaySet@scores <- sparseMatrix(
+        i = i,
+        j = j,
+        x = standardScores,
+        dims = tMatrix@Dim,
+        dimnames = tMatrix@Dimnames,
+        symmetric = FALSE,
+        index1 = FALSE)
+    
+    return(bioassaySet)
+}
+
 # returns a ChemmineR style FPset object for a given set of cids and targets
 bioactivityFingerprint <- function(bioassaySet, targets = FALSE, summarizeReplicates = "activesFirst"){
   if(class(bioassaySet) != "bioassaySet")
@@ -208,11 +243,11 @@ assaySetTargets <- function(assays){
 
 # This takes a bioassaySet of multiple assays, and returns one with a single score
 # per target- collapsing multiple assays against distinct targets into a single assay
-# values:
+# values if useNumericScores = FALSE:
 #   0 = untested or inconclusive
 #   1 = inactive
 #   2 = active in 1 or more assays (can still be inactive in some)
-perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targetOrder = FALSE, summarizeReplicates = "activesFirst"){
+perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targetOrder = FALSE, summarizeReplicates = "activesFirst", useNumericScores = FALSE){
     # check input sanity
     if(class(assays) != "bioassaySet")
         stop("database not of class bioassaySet")
@@ -226,21 +261,39 @@ perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targ
         stop("targetOrder not of class character")
     if(is.logical(targetOrder) && isTRUE(targetOrder))
         stop("TRUE is an invalid option for targetOrder- it must be FALSE or character")
-    if(class(summarizeReplicates) != "function" && summarizeReplicates != "mode" && summarizeReplicates != "activesFirst")
-        stop("invalid conflict resolver option")
+    if(class(summarizeReplicates) != "function" && class(summarizeReplicates) != "standardGeneric")
+        if(summarizeReplicates != "mode" && summarizeReplicates != "activesFirst")
+            stop("invalid conflict resolver option")
+    if(class(useNumericScores) != "logical")
+        stop("useNumericScores option not of class logical (TRUE or FALSE)")
+    
+    # message("Note: in this version active scores now use a 2 instead of a 1")
 
-    message("Note: in this version active scores now use a 2 instead of a 1")
-
-    # Get coordinates of scores
-    # NOTE: inactives must come after active values
-    #   for later duplicate removal to give preference to active scores
-    activityMatrix <- slot(assays, "activity")
-    coords <- which(activityMatrix == 2, arr.ind=TRUE)
-    suppressWarnings(coords <- cbind(coords,2))
-    if(inactives){
-        inactiveCoords <- which(activityMatrix == 1, arr.ind=TRUE)
-        suppressWarnings(inactiveCoords <- cbind(inactiveCoords,1))
-        coords <- rbind(coords, inactiveCoords)
+    if(useNumericScores){
+        # assays <- scaleBioassaySet(getAssays(db, c(348, 360, 368))) # test code
+        activityMatrix <- assays@scores
+        tMatrix <- as(activityMatrix, "TsparseMatrix")
+        i <- tMatrix@i
+        j <- tMatrix@j
+        x <- tMatrix@x
+        x[x == "NaN"] <- 0
+        sortIndex <- sort.int(abs(x), decreasing=T, index.return=T)$ix
+        i <- i[sortIndex]
+        j <- j[sortIndex]
+        x <- x[sortIndex]
+        coords <- cbind(i+1, j+1, x)
+    } else {
+        # Get coordinates of scores
+        # NOTE: inactives must come after active values
+        #   for later duplicate removal to give preference to active scores
+        activityMatrix <- slot(assays, "activity")
+        coords <- which(activityMatrix == 2, arr.ind=TRUE)
+        suppressWarnings(coords <- cbind(coords,2))
+        if(inactives){
+            inactiveCoords <- which(activityMatrix == 1, arr.ind=TRUE)
+            suppressWarnings(inactiveCoords <- cbind(inactiveCoords,1))
+            coords <- rbind(coords, inactiveCoords)
+        }
     }
     
     # get assay to target mappings 
@@ -253,11 +306,13 @@ perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targ
     cidsPerAssay <- colnames(activityMatrix)[coords[,2]]
     cidsPerAssay <- cidsPerAssay[! is.na(targetsPerAssay)]
     activityScores <- coords[,3][! is.na(targetsPerAssay)]
-    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)]    
-
-    if(summarizeReplicates != "activesFirst"){
+    targetsPerAssay <- targetsPerAssay[! is.na(targetsPerAssay)] 
+    
+    if(class(summarizeReplicates) == "character")
         if(summarizeReplicates == "mode")
             summarizeReplicates <- function(x) { as.numeric(names(which.max(table(x)))) }
+    
+    if(class(summarizeReplicates) != "character"){
 
         # identify cid/target pairs that are duplicated and resolve according to specified rule
         mergedPairs <- paste(cidsPerAssay, targetsPerAssay, sep="______")
