@@ -1,0 +1,262 @@
+<?xml version="1.0"?>
+<PC-AssayDescription
+    xmlns="http://www.ncbi.nlm.nih.gov"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+    xs:schemaLocation="http://www.ncbi.nlm.nih.gov ftp://ftp.ncbi.nlm.nih.gov/pubchem/specifications/pubchem.xsd"
+>
+  <PC-AssayDescription_aid>
+    <PC-ID>
+      <PC-ID_id>2557</PC-ID_id>
+      <PC-ID_version>1</PC-ID_version>
+    </PC-ID>
+  </PC-AssayDescription_aid>
+  <PC-AssayDescription_aid-source>
+    <PC-Source>
+      <PC-Source_db>
+        <PC-DBTracking>
+          <PC-DBTracking_name>NMMLSC</PC-DBTracking_name>
+          <PC-DBTracking_source-id>
+            <Object-id>
+              <Object-id_str>UNMCMD_VLA4_LIBS_HTS</Object-id_str>
+            </Object-id>
+          </PC-DBTracking_source-id>
+        </PC-DBTracking>
+      </PC-Source_db>
+    </PC-Source>
+  </PC-AssayDescription_aid-source>
+  <PC-AssayDescription_name>HTS for Identification of VLA-4 Allosteric Modulators from MLPCN library</PC-AssayDescription_name>
+  <PC-AssayDescription_description>
+    <PC-AssayDescription_description_E>University of New Mexico Assay Overview:</PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Assay Support   </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Project Title:HTS for Identification of VLA-4 Allosteric Modulators 1 R01 HL081062-01  </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>PI:Larry Sklar PhD and Alex Chigaev PhD </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Assay Implementation:  Peter Simons PhD, Susan Young MS, Yang Wu PhD, Terry Foutz, Stephanie Sedillo, Anna Waller PhD, Mark Carter MS</PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>Assay Background and Significance:</PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E></PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>We have developed a novel ligand induced binding site (LIBS) mAb assay for integrin HTS using phycoerythrin (PE) labeled HUTS-21 mAb. The novel assay is a result of an R01 (HL081062) which has taken advantage of compounds identified through an earlier project X01MH077638 (entitled &quot;MLSCN Assay for Allosteric Regulators of the VLA-4 Integrin&quot;) that screened a portion of the MLSMR for allosteric regulators of VLA-4. This approach uses an improved assay to search for novel integrin ligands that block the binding of traditional ligands and do not in themselves induce the LIBS mAb binding site. Molecules of this type are unknown for VLA-4. As configured, the new assay could identify for the first time allosteric regulators of VLA-4 as well as competitive inhibitors that do not induce LIBS. This assay is a homogeneous flow cytometry based assay for the detection of ligand occupied binding pocket using conformationally sensitive mAbs. We tested several VLA-4 integrin ligands for the induction of LIBS, and confirmed that the binding of mAbs showed a good correlation with Kds determined in a competition assay with a fluorescent ligand. Two secondary assays validated previously in our laboratory will verify the screen and reduce the number of actives for follow up. Tertiary assays for selectivity and mechanism of action will guide the SAR chemistry. </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E> </PC-AssayDescription_description_E>
+    <PC-AssayDescription_description_E>From a therapeutic point of view integrins are the most important class of cell adhesion receptors that mediate cell to cell, or cell to extracellular matrix adhesion. VLA-4 (very late antigen 4, alpha4beta1-integrin, CD49d/CD29) plays a major role in the regulation of immune cell recruitment to inflamed endothelia and sites of inflammation. It participates in antigen presenting cell and lymphocyte interactions, retention and mobilization of immature progenitors in the bone marrow, cancer cell trafficking, metastasis and other events. Integrins represent an attractive target for several existing drugs for treatment of inflammatory diseases, anti-angiogenic therapy, and anti-thrombotic therapy. Integrin ligands can also be used as imaging tools [Alghisi 2006,Tucker 2006, Vanderslice and Woodside 2006, Woodside and Vanderslice 2008], as well as probes for studies of integrin functional activity and molecular conformation (Chigaev et al 2001, 2003, 2009, 2008, 2007, 2003, 2004]. Several classes of small-molecule integrin inhibitors have been developed. Competitive antagonists (ligand-mimetic) bind directly to the integrin ligand binding pocket and thus disrupt ligand-receptor interaction. In recent work, we showed that these ligands induce conformational changes detected as Ligand Induced Binding Sites (LIBS). Allosteric antagonists, a next generation of compounds with high selectivity and potency, have been developed primarily for alphaLbeta2- integrin (LFA-1, lymphocyte function-associated antigen 1) [Shimaoka 2003]. No allosteric antagonists for alpha4beta1-integrin have been described. The goal of our research is to discover small molecule allosteric antagonists for alpha4beta1-integrin that do not induce LIBS. The proposed high throughput screening (HTS) of the Molecular Libraries Small Molecule Repository (MLSMR) is intended to result in novel lead compounds. The HTS will use a unique method for the detection of ligand#binding pocket occupancy based upon binding of mAbs recognizing ligand induced binding sites (LIBS). This method has been validated for several known and newly discovered alpha4beta1-integrin (VLA-4 (very late antigen 4, CD49d/CD29)) ligands. Since LIBS mAbs are available for many integrins, this approach is expected to be generally applicable. </PC-AssayDescription_description_E>
+  </PC-AssayDescription_description>
+  <PC-AssayDescription_protocol>
+    <PC-AssayDescription_protocol_E>The assay is performed in 384-well microtiter plates.  </PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>Five microL of RPMI is added to columns 2-24. Test compounds in DMSO are added and mixed (0.1 microL of 1 milliM stock solution). This results in 20 microM of test compounds (6.7 microM final in 15 microL). Compounds are added to 320 wells (columns 3-22). Column 2 is used for the negative control (no VLA-4 ligand added). Columns 23, 24 are used for the positive control (no test compounds added). Five microL aliquots of U937 cells suspended in RPMI 1640 (at 3 X 10^6 cells/milliL) are loaded in 384 well microplates, and mixed (1 X 10^6 cells/milliL final). Column 1 is left empty for flow cytometry data binning purposes. </PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>Next, 5 microL mixture of a non fluorescent VLA-4 ligand (108 nanoM stock solution of LDV, 36 nanoM final) with HUTS-21 PE antibodies (75 microL/milliL stock, 25 microL/milliL final) are added to the columns 3-24 and mixed. This concentration of LDV (36 nanoM) is equal to three times the dissociation constant (Kd) of LDV. 5 microL aliquot of HUTS-21 PE antibodies without LDV (75 microL/milliL stock, 25 microL/milliL final)) added to a column 2, which is used as a negative control (only non-specific binding of mAbs will be detected). Addition of the ligand will induce LIBS and therefore initiate binding of antibodies. Plates are incubated for 1 hour at 37 degrees C. According to the real-time kinetic studies this time is sufficient to reach equilibrium. Wells are sampled using a high throughput flow cytometry platform (HyperCyt, IntelliCyt, Albuquerque, NM). &quot;Sip time&quot; of approximately 1 second is sufficient to deliver several thousand cells for analysis per well (~10 min per plate).  After data acquisition, proprietary software is used to analyze the data files (HyperView, UNMCMD, developed by Bruce Edwards). This software automatically resolves data clusters of cells into 368 time bins, or wells with cells, per plate, and analyzes each bin to determine mean or median fluorescence intensity (MFI).</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>The data are exported into a Microsoft Excel spreadsheet template, and the value of the antibody binding inhibition (%Inhibition) is calculated for each well as follows:</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>% Inhibition= 100(1-((MFItest-MFIneg.control)/(MFIpos.control-MFIneg.control)))</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>where MFI is median fluorescence intensity of cells with test compounds, positive or negative control wells.</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>PUBCHEM_SCORE is based on the %Inhibition (PUBCHEM_SCORE = %Inhibition) with the limits of %Inhibition &lt; 0 are given PUBCHEM_SCORE = 0 and %Inhibition &gt; 100 are given PUBCHEM_SCORE = 100.  Negative %Inhibition are primarily due to test compounds with innate fluorescence.</PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E></PC-AssayDescription_protocol_E>
+    <PC-AssayDescription_protocol_E>A compound is deemed active if the %Inhibition is greater than 50%.  This cutoff corresponds to about three times the standard deviation of %Inhibition from &apos;non-fluorescent&apos; test compounds. </PC-AssayDescription_protocol_E>
+  </PC-AssayDescription_protocol>
+  <PC-AssayDescription_xref>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>528</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Allosteric Agonists for the VLA-4 Integrin </PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>529</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Allosteric Antagonists for the VLA-4 Integrin</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>702</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Dose-Response of Allosteric Antagonists for the VLA-4 Integrin</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>703</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Dose-Response of Allosteric Agonists for the VLA-4 Integrin</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_aid>1998</PC-XRefData_aid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>MLSCN HTS Assay for Allosteric Ligands for the VLA-4 Integrin:  Summary Report</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_mim>192975</PC-XRefData_mim>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>INTEGRIN, ALPHA-4; ITGA4</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_mesh>D039222</PC-XRefData_mesh>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Integrin alpha1 beta1</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_gene>3676</PC-XRefData_gene>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>ITGA4 integrin, alpha 4 (antigen CD49D, alpha 4 subunit of VLA-4 receptor) [Homo sapiens]</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_dburl>http://nmmlsc.health.unm.edu</PC-XRefData_dburl>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>16507218</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Tucker, G. C. (2006) Integrins: molecular targets in cancer therapy, Curr.Oncol.Rep. 8, 96-103.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>16989599</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Vanderslice, P. and Woodside, D. G. (2006) Integrin antagonists as therapeutics for inflammatory diseases, Expert.Opin.Investig.Drugs. 15, 1235-1255.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>18345706</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Woodside, D. G. and Vanderslice, P. (2008) Cell adhesion antagonists: therapeutic potential in asthma and chronic obstructive pulmonary disease, BioDrugs. 22, 85-100.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>11641394</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Blenc, A. M., Braaten, J. V., Kumaraswamy, N., Kepley, C. L., Andrews, R. P., Oliver, J. M., Edwards, B. S., Prossnitz, E. R., Larson, R. S., and Sklar, L. A. (2001) Real time analysis of the affinity regulation of alpha 4-integrin. The physiologically activated receptor is intermediate in affinity between resting and Mn(2+) or antibody activation, Journal of Biological Chemistry. 276, 48670-48678.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>14645084</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Buranda, T., Dwyer, D. C., Prossnitz, E. R., and Sklar, L. A. (2003) FRET detection of cellular alpha4-integrin conformational activation, Biophys.J. 85, 3951-3962.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>19251697</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Waller, A., Amit, O., Halip, L., Bologa, C. G., and Sklar, L. A. (2009) Real-time Analysis of Conformation-sensitive Antibody Binding Provides New Insights into Integrin Conformational Regulation, Journal of Biological Chemistry. 284, 14337-14346.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>18534032</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Waller, A., Amit, O., and Sklar, L. A. (2008) Galphas-coupled receptor signaling actively down-regulates alpha4beta1-integrin affinity: a possible mechanism for cell de-adhesion, BMC.Immunol. 9, 26.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>17513731</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Waller, A., Zwartz, G. J., Buranda, T., and Sklar, L. A. (2007) Regulation of cell adhesion by affinity and conformational unbending of alpha4beta1 integrin, J.Immunol. 178, 6828-6839.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>12844491</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Zwartz, G., Graves, S. W., Dwyer, D. C., Tsuji, H., Foutz, T. D., Edwards, B. S., Prossnitz, E. R., Larson, R. S., and Sklar, L. A. (2003) Alpha4beta1 integrin affinity changes govern cell adhesion, Journal of Biological Chemistry. 278, 38174-38182</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>15166232</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Chigaev, A., Zwartz, G. J., Buranda, T., Edwards, B. S., Prossnitz, E. R., and Sklar, L. A. (2004) Conformational regulation of alpha 4 beta 1-integrin affinity by reducing agents. &quot;Inside-out&quot; signaling is independent of and additive to reduction-regulated integrin activation, Journal of Biological Chemistry. 279, 32435-32443.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+    <PC-AnnotatedXRef>
+      <PC-AnnotatedXRef_xref>
+        <PC-XRefData>
+          <PC-XRefData_pmid>11170109</PC-XRefData_pmid>
+        </PC-XRefData>
+      </PC-AnnotatedXRef_xref>
+      <PC-AnnotatedXRef_comment>Edwards, B. S., Kuckuck, F. W., Prossnitz, E. R., Okun, A., Ransom, J. T., and Sklar, L. A. (2001) Plug flow cytometry extends analytical capabilities in cell adhesion and receptor pharmacology, Cytometry. 43, 211-216.</PC-AnnotatedXRef_comment>
+    </PC-AnnotatedXRef>
+  </PC-AssayDescription_xref>
+  <PC-AssayDescription_results>
+    <PC-ResultType>
+      <PC-ResultType_tid>1</PC-ResultType_tid>
+      <PC-ResultType_name>PERCENT_INHIBITION</PC-ResultType_name>
+      <PC-ResultType_description>
+        <PC-ResultType_description_E>Percent Inhibition of HUTS-21 antibody binding</PC-ResultType_description_E>
+      </PC-ResultType_description>
+      <PC-ResultType_type value="float">1</PC-ResultType_type>
+      <PC-ResultType_unit value="percent">15</PC-ResultType_unit>
+    </PC-ResultType>
+  </PC-AssayDescription_results>
+  <PC-AssayDescription_revision>3</PC-AssayDescription_revision>
+  <PC-AssayDescription_target>
+    <PC-AssayTargetInfo>
+      <PC-AssayTargetInfo_name>integrin alpha-4 precursor [Homo sapiens]</PC-AssayTargetInfo_name>
+      <PC-AssayTargetInfo_mol-id>67191027</PC-AssayTargetInfo_mol-id>
+      <PC-AssayTargetInfo_molecule-type value="protein">1</PC-AssayTargetInfo_molecule-type>
+      <PC-AssayTargetInfo_organism>
+        <BioSource>
+          <BioSource_org>
+            <Org-ref>
+              <Org-ref_taxname>Homo sapiens</Org-ref_taxname>
+              <Org-ref_common>human</Org-ref_common>
+              <Org-ref_db>
+                <Dbtag>
+                  <Dbtag_db>taxon</Dbtag_db>
+                  <Dbtag_tag>
+                    <Object-id>
+                      <Object-id_id>9606</Object-id_id>
+                    </Object-id>
+                  </Dbtag_tag>
+                </Dbtag>
+              </Org-ref_db>
+            </Org-ref>
+          </BioSource_org>
+        </BioSource>
+      </PC-AssayTargetInfo_organism>
+      <PC-AssayTargetInfo_descr>integrin alpha-4 precursor [Homo sapiens]</PC-AssayTargetInfo_descr>
+    </PC-AssayTargetInfo>
+  </PC-AssayDescription_target>
+  <PC-AssayDescription_activity-outcome-method value="screening">1</PC-AssayDescription_activity-outcome-method>
+  <PC-AssayDescription_grant-number>
+    <PC-AssayDescription_grant-number_E>R01 HL081062-01</PC-AssayDescription_grant-number_E>
+  </PC-AssayDescription_grant-number>
+  <PC-AssayDescription_project-category value="mlpcn">2</PC-AssayDescription_project-category>
+</PC-AssayDescription>
