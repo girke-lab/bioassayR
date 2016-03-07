@@ -53,6 +53,8 @@ This internally uses a sparse matrix
 to save system memory, while allowing the user to leverage R language matrix features to
 further investigate these data.
 
+![overview](figures/bioassayR.png)
+
 Getting Started
 ===================
 
@@ -477,6 +479,10 @@ myActivityMatrix <- perTargetMatrix(selectedAssayData, inactives=TRUE, summarize
 myActivityMatrix[1:15,] # print the first 15 rows
 ```
 
+The activity matrix can also be optionally created with raw numeric scores, or scaled and centered
+Z-scores, instead of discrete active/inactive values. For more details on this option, see the man pages for the
+*perTargetMatrix* and *scaleBioassaySet* functions.
+
 Next, we will re-create the activity matrix where protein targets
 that are very similar at the sequence level (such as orthologues from different species)
 are treated as replicates, and merged.
@@ -576,9 +582,45 @@ simMA
 ```
 
 Convert similarity matrix to a distance matrix and perform hierarcheal clustering.
+
 ```{r eval=TRUE, tidy=FALSE}
 clusterResults <- hclust(as.dist(1-simMA), method="single")
 plot(clusterResults)
+```
+
+One way to visualize the relative bioactivity similarity for a large number of compounds is with a
+multidimensional scaling (aka MDS or principal coordinates analysis) plot
+where each compound is represented as a point and bioactivity distance is proportional to
+the distance between any two points. Note that the X and Y axis both represent
+bioactivity distance. The following example also applies a small position jitter, so that
+points representing compounds with identical bioactivity do not overlap.
+
+```{r eval=TRUE, tidy=FALSE}
+library(ggplot2)
+
+# 2 dimensional MDS transformation
+plotdata <- cmdscale(as.dist(1-simMA), k=2)
+dat <- data.frame(xvar=plotdata[,1], yvar=plotdata[,2])
+
+# setup plot theme
+mytheme = theme(plot.margin = unit(c(.2,.2,.2,.2), units = "lines"),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.ticks.length = unit(0, "lines"),
+    axis.ticks.margin = unit(0, "lines"))
+
+# scatterplot of x and y variables
+minR <- min(range(dat$xvar), range(dat$yvar)) - 0.1
+maxR <- 0.2 + max(range(dat$xvar), range(dat$yvar))
+scatter <- ggplot(dat, aes(xvar, yvar)) +
+    xlim(minR, maxR) + ylim(minR,maxR) +
+    geom_point(shape=19, position = position_jitter(w = 0.05, h = 0.05)) +
+    scale_colour_brewer(palette="Set1") +
+    mytheme + theme(legend.position="none") +
+    xlab("Bioactivity Fingerprint Distance") +
+    ylab("Bioactivity Fingerprint Distance")
+
+plot(scatter)
 ```
 
 Finally, disconnect from the database.
