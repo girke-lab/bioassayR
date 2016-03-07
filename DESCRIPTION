@@ -1,14 +1,15 @@
 Package: bioassayR
 Type: Package
 Title: Cross-target analysis of small molecule bioactivity
-Version: 1.9.23
-Date: 2016-2-10
+Version: 1.9.24
+Date: 2016-3-07
 Author: Tyler Backman, Ronly Schlenk, Thomas Girke
 Maintainer: Tyler Backman <tyler.backman@email.ucr.edu>
 Depends: R (>= 3.1.0), DBI (>= 0.3.1), RSQLite (>= 1.0.0), methods, Matrix, rjson, BiocGenerics (>= 0.13.8)
 Imports: XML, ChemmineR
-Suggests: BiocStyle, RCurl, biomaRt, cellHTS2, knitr, knitcitations, RefManageR, testthat
+Suggests: BiocStyle, RCurl, biomaRt, cellHTS2, knitr, knitcitations, RefManageR, testthat, ggplot2
 Description: Despite a large and rapidly growing body of small molecule bioactivity data, systematic leverage of these data as a reference for identifying compounds with a desired bioactivity, and assessing the drugability of protein targets are limited by informatics challenges stemming from the large data volume, heterogenous experimental designs, sparseness, and noise. This tool addresses these issues to enable simultaneous analysis of thousands of bioassay experiments performed over a diverse and sparse set of compounds and biological targets.
+URL: https://github.com/TylerBackman/bioassayR
 License: Artistic-2.0
 biocViews: MicrotitrePlateAssay, CellBasedAssays, Visualization, Infrastructure, DataImport, Bioinformatics, Proteomics 
 LazyLoad: yes 
