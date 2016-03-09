@@ -61,7 +61,7 @@ Getting Started
 Installation
 ------------
 
-The R software for running bioassayR can be downloaded from CRAN (<http://cran.at.r-project.org/>). The *bioassayR* package can be installed from R using the *bioLite* install command. 
+The R software for running bioassayR can be downloaded from CRAN (<http://cran.at.r-project.org/>). The *bioassayR* package can be installed from R using the *biocLite* install command. 
 
 ```{r eval=FALSE}
 source("http://bioconductor.org/biocLite.R") # Sources the biocLite.R installation script
