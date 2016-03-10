@@ -98,7 +98,7 @@ addDataSource <- function(database, description, version){
 }
 
 # parses input files from PubChem Bioassay
-parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
+parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop"){
     if(! file.exists(csvFile)){
         stop("csv file doesn't exist")
     }   
@@ -157,6 +157,14 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
         tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
         colnames(tempAssay) <- c("cid", "activity", "score")
+        if(sum(tempAssay$cid == "") > 0){
+            if(missingCid = "drop"){
+                warning("dropping missing cid(s)")
+                tempAssay <- tempAssay[tempAssay$cid != "",,drop=F]
+            } else {
+                stop("missing cid in input csv and drop option not set")
+            }
+        }
         if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
             stop("non-integer cid")
         if(sum(as.integer(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))

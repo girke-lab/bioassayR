@@ -7,7 +7,7 @@ Parse PubChem Bioassay Data
 Parses a PubChem Bioassay experimental result from two required files (a csv file and an XML description) into a \code{bioassay} object.
 }
 \usage{
-parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop")
+parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop")
 }
 \arguments{
   \item{aid}{
@@ -25,6 +25,11 @@ only the first of each duplicated cid is kept and a warning is returned. If 'FAL
 processing will stop with an error if duplicates are present. If 'TRUE' duplicates
 will be included without warning, which may cause erroneous results with other
 bioassayR functions that assume a unique cid list for each assay.
+}
+  \item{missingCid}{
+A value of either 'drop' or a logical value of FALSE. If 'FALSE' processing
+will stop with an error for any input compounds with an empty cid string.
+If 'drop' is specified, a warning will be issued and these compounds will be skipped.
 }
 }
 \value{
