@@ -158,7 +158,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
         colnames(tempAssay) <- c("cid", "activity", "score")
         if(sum(tempAssay$cid == "") > 0){
-            if(missingCid = "drop"){
+            if(missingCid == "drop"){
                 warning("dropping missing cid(s)")
                 tempAssay <- tempAssay[tempAssay$cid != "",,drop=F]
             } else {
