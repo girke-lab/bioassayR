@@ -172,9 +172,11 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
                 stop("missing cid in input csv and drop option not set")
             }
         }
+        tempAssay$score[tempAssay$score == ""] <- NA
         if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
             stop("non-integer cid")
-        if(sum(as.numeric(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))
+        if(sum(!is.na(as.numeric(tempAssay$score) == as.character(tempAssay$score)))
+           < sum(! is.na(tempAssay$score)))
             stop("non-numeric score")
     }
 
