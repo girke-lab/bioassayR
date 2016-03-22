@@ -98,7 +98,7 @@ addDataSource <- function(database, description, version){
 }
 
 # parses input files from PubChem Bioassay
-parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
+parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop", scoreRegex = "inhibition"){
     if(! file.exists(csvFile)){
         stop("csv file doesn't exist")
     }   
@@ -149,7 +149,14 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
         )
         tempAssay <- as.data.frame(tempAssay, stringsAsFactors=FALSE)
         colnames(tempAssay) <- header
-        tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+        rawScoreRows <- grep(scoreRegex, header, perl=TRUE, ignore.case = TRUE)
+        if(length(rawScoreRows) > 0){
+            tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", header[rawScoreRows[1]])]
+            scoring <- header[rawScoreRows[1]]
+        } else {
+            tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
+            scoring <- "PUBCHEM_ACTIVITY_SCORE"
+        }
         outcomes <- rep(NA, nrow(tempAssay))
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
@@ -157,10 +164,18 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 2] <- 1
         tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] <- outcomes
         colnames(tempAssay) <- c("cid", "activity", "score")
+        if(sum(tempAssay$cid == "") > 0){
+            if(missingCid == "drop"){
+                warning("dropping missing cid(s)")
+                tempAssay <- tempAssay[tempAssay$cid != "",,drop=F]
+            } else {
+                stop("missing cid in input csv and drop option not set")
+            }
+        }
         if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
             stop("non-integer cid")
-        if(sum(as.integer(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))
-            stop("non-integer score")
+        if(sum(as.numeric(tempAssay$score) == as.character(tempAssay$score)) < length(tempAssay$score))
+            stop("non-numeric score")
     }
 
     # handle duplicate cids
@@ -176,11 +191,11 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
     xmlLines <- readLines(xmlFile)
     xmlLines <- paste(xmlLines, collapse="\n")
     xmlPointer <- xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
-    targets <- xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x")
-    targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x")
-    type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]]
-    comments <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x")
-    scoring <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
+    suppressWarnings(targets <- xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x"))
+    suppressWarnings(targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x"))
+    suppressWarnings(type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]])
+    suppressWarnings(comments <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x"))
+    # scoring <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
     free(xmlPointer)
     organism <- comments[grep("^Organism:\\W", comments)]
     organism <- gsub("^Organism:\\W(.*)$", "\\1", organism)[1]
@@ -193,9 +208,9 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop"){
     if(is.null(targetTypes)){
         targetTypes <- NA
     }
-    if(is.null(scoring)){
-        scoring <- NA
-    }
+    #  if(is.null(scoring)){
+    #    scoring <- NA
+    # }
     if(length(targets) != length(targetTypes)){
         stop(paste("error with aid", aid))
     }
