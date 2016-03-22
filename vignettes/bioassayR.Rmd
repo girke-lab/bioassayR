@@ -53,7 +53,11 @@ This internally uses a sparse matrix
 to save system memory, while allowing the user to leverage R language matrix features to
 further investigate these data.
 
-![overview](figures/bioassayR.png)
+![Organizational overview of bioassayR. Custom and public bioassays
+are loaded into the bioassayDB database, and accessor functions will query
+these data to identify targets and compounds of interest. A compound vs. target
+sparse matrix or bioactivity fingerprint can be generated for further analysis of
+any combination of compounds and targets.](figures/bioassayR.png)
 
 Getting Started
 ===================

@@ -7,7 +7,7 @@ Parse PubChem Bioassay Data
 Parses a PubChem Bioassay experimental result from two required files (a csv file and an XML description) into a \code{bioassay} object.
 }
 \usage{
-parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop")
+parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop", scoreRegex = "inhibition")
 }
 \arguments{
   \item{aid}{
@@ -30,6 +30,13 @@ bioassayR functions that assume a unique cid list for each assay.
 A value of either 'drop' or a logical value of FALSE. If 'FALSE' processing
 will stop with an error for any input compounds with an empty cid string.
 If 'drop' is specified, a warning will be issued and these compounds will be skipped.
+}
+  \item{scoreRegex}{
+A regular expression (perl compatible, case insensitive) to be matched to the column names
+in the CSV header, to identify relavent score rows. If any rows match this regex, the
+first matching row will be used in place of the "PUBCHEM_ACTIVITY_SCORE" and it's row
+name will be stored as the assays scoring method. The default will identify
+most PubChem Bioassays which contain protein target inhibition data.
 }
 }
 \value{
