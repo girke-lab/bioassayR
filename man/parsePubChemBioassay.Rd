@@ -7,7 +7,8 @@ Parse PubChem Bioassay Data
 Parses a PubChem Bioassay experimental result from two required files (a csv file and an XML description) into a \code{bioassay} object.
 }
 \usage{
-parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop", scoreRegex = "inhibition")
+parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop",
+    missingCid = "drop", scoreRegex = "inhibition")
 }
 \arguments{
   \item{aid}{
