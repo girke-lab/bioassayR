@@ -35,7 +35,7 @@ If 'drop' is specified, a warning will be issued and these compounds will be ski
   \item{scoreRegex}{
 A regular expression (perl compatible, case insensitive) to be matched to the column names
 in the CSV header, to identify relavent score rows. If any rows match this regex, the
-first matching row will be used in place of the "PUBCHEM_ACTIVITY_SCORE" and it's row
+first matching row will be used in place of the 'PUBCHEM_ACTIVITY_SCORE' and it's row
 name will be stored as the assays scoring method. The default will identify
 most PubChem Bioassays which contain protein target inhibition data.
 }
