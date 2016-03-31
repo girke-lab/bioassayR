@@ -149,12 +149,6 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         )
         tempAssay <- as.data.frame(tempAssay, stringsAsFactors=FALSE)
         colnames(tempAssay) <- header
-<<<<<<< HEAD
-        rawScoreRows <- grep(scoreRegex, header, perl=TRUE, ignore.case = TRUE)
-        if(length(rawScoreRows) > 0){
-            tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", header[rawScoreRows[1]])]
-            scoring <- header[rawScoreRows[1]]
-=======
 
         # use first score row that matches regex and has numeric data
         rawScoreRows <- grep(scoreRegex, header, perl=TRUE, ignore.case = TRUE)
@@ -170,15 +164,11 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         if(useRow > 0){
             tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", header[useRow])]
             scoring <- header[useRow]
->>>>>>> master
         } else {
             tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
             scoring <- "PUBCHEM_ACTIVITY_SCORE"
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> master
         outcomes <- rep(NA, nrow(tempAssay))
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == "Active"] <- 1
         outcomes[tempAssay[,"PUBCHEM_ACTIVITY_OUTCOME"] == 1] <- 0
@@ -197,12 +187,6 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         tempAssay$score[tempAssay$score == ""] <- NA
         if(sum(as.integer(tempAssay$cid) == as.character(tempAssay$cid)) < length(tempAssay$cid))
             stop("non-integer cid")
-<<<<<<< HEAD
-        if(sum(!is.na(as.numeric(tempAssay$score) == as.character(tempAssay$score)))
-           < sum(! is.na(tempAssay$score)))
-            stop("non-numeric score")
-=======
->>>>>>> master
     }
 
     # handle duplicate cids
