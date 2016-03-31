@@ -8,11 +8,7 @@ Parses a PubChem Bioassay experimental result from two required files (a csv fil
 }
 \usage{
 parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop",
-<<<<<<< HEAD
-    missingCid = "drop", scoreRegex = "inhibition")
-=======
     missingCid = "drop", scoreRegex = "inhibition|ic50|ki|gi50|ec50|ed50|lc50")
->>>>>>> master
 }
 \arguments{
   \item{aid}{
