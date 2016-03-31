@@ -98,11 +98,7 @@ addDataSource <- function(database, description, version){
 }
 
 # parses input files from PubChem Bioassay
-<<<<<<< HEAD
-parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop", scoreRegex = "inhibition"){
-=======
 parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", missingCid = "drop", scoreRegex = "inhibition|ic50|ki|gi50|ec50|ed50|lc50"){
->>>>>>> master
     if(! file.exists(csvFile)){
         stop("csv file doesn't exist")
     }   
