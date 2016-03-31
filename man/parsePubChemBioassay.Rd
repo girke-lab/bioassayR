@@ -8,7 +8,11 @@ Parses a PubChem Bioassay experimental result from two required files (a csv fil
 }
 \usage{
 parsePubChemBioassay(aid, csvFile, xmlFile, duplicates = "drop",
+<<<<<<< HEAD
     missingCid = "drop", scoreRegex = "inhibition")
+=======
+    missingCid = "drop", scoreRegex = "inhibition|ic50|ki|gi50|ec50|ed50|lc50")
+>>>>>>> master
 }
 \arguments{
   \item{aid}{
@@ -38,6 +42,11 @@ in the CSV header, to identify relavent score rows. If any rows match this regex
 first matching row will be used in place of the 'PUBCHEM_ACTIVITY_SCORE' and it's row
 name will be stored as the assays scoring method. The default will identify
 most PubChem Bioassays which contain protein target inhibition data.
+<<<<<<< HEAD
+=======
+If a matching row contains all empty or non-numeric results, the next
+matching row is automatically used.
+>>>>>>> master
 }
 }
 \value{
