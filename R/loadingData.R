@@ -130,6 +130,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
     if(length(csvLines) < 2){
         tempAssay <- t(data.frame(row.names=c("cid", "activity", "score")))
         tempAssay <- as.data.frame(tempAssay)
+        scoringMethod <- NA 
     } else {
         header <- strsplit(csvLines[[1]], "\\s*,\\s*")[[1]]
         if(sum(c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE") %in% header) < 3)
@@ -163,10 +164,10 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         }
         if(useRow > 0){
             tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", header[useRow])]
-            scoring <- header[useRow]
+            scoringMethod <- header[useRow]
         } else {
             tempAssay <- tempAssay[,c("PUBCHEM_CID", "PUBCHEM_ACTIVITY_OUTCOME", "PUBCHEM_ACTIVITY_SCORE")]
-            scoring <- "PUBCHEM_ACTIVITY_SCORE"
+            scoringMethod <- "PUBCHEM_ACTIVITY_SCORE"
         }
 
         outcomes <- rep(NA, nrow(tempAssay))
@@ -206,7 +207,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
     suppressWarnings(targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x"))
     suppressWarnings(type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]])
     suppressWarnings(comments <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x"))
-    # scoring <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
+    # scoringMethod <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
     free(xmlPointer)
     organism <- comments[grep("^Organism:\\W", comments)]
     organism <- gsub("^Organism:\\W(.*)$", "\\1", organism)[1]
@@ -219,8 +220,8 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
     if(is.null(targetTypes)){
         targetTypes <- NA
     }
-    #  if(is.null(scoring)){
-    #    scoring <- NA
+    #  if(is.null(scoringMethod)){
+    #    scoringMethod <- NA
     # }
     if(length(targets) != length(targetTypes)){
         stop(paste("error with aid", aid))
@@ -233,7 +234,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         source_id="PubChem BioAssay",
         assay_type=as.character(type),
         organism=as.character(organism),
-        scoring=as.character(scoring),
+        scoring=as.character(scoringMethod),
         targets = as.character(targets),
         target_types = as.character(targetTypes),
         scores=tempAssay
