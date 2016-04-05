@@ -547,7 +547,7 @@ getAssay <- function(database, aid){
 
 # takes cids and a database and returns the target selectivity of the query cids
 # scoring method is either as total active targets or fraction of active targets
-targetSelectivity <- function(database, cids, scoring="total"){
+targetSelectivity <- function(database, cids, scoring="total", category=FALSE, multiTarget="keepOne"){
     if(class(database) != "BioassayDB")
         stop("'database' not of class 'BioassayDB'")
     if(is.numeric(cids)){
@@ -556,18 +556,53 @@ targetSelectivity <- function(database, cids, scoring="total"){
         stop("'cids' not class 'character'")
     }
     if(! scoring %in% c("total", "fraction")){
-        stop("'scoring' must be of type 'total' or 'fraction'")
+        stop("'scoring' must be one of the following: total or fraction")
     }
-    activeTargets <- sapply(cids, function(cid){
-        length(unique(.targetsByCid(database, cid, activity = 1)$target))    
-    })
-    if(scoring == "total"){
-        return(activeTargets)
-    }
-    inactiveTargets <- sapply(cids, function(cid){
-        length(unique(.targetsByCid(database, cid, activity = 0)$target))    
-    })
-    return(activeTargets/(activeTargets+inactiveTargets))    
+    allCategories <- .allCategories(database) 
+    if(is.logical(category) && category)
+        stop(paste(c("'category' must be either 'FALSE' or an available translation category.
+             valid options: FALSE", allCategories), collapse=" "))
+    if(! is.logical(category) && (! category %in% allCategories))
+        stop(paste(c("'category' must be either 'FALSE' or an available translation category.
+             valid options: FALSE", allCategories), collapse=" "))
+    if((multiTarget != "drop") && (multiTarget != "keepOne") && (multiTarget != "all"))
+        stop("multiTarget must be one of the following: drop, keepOne, all")
+    
+    return(sapply(cids, function(cid){
+        activityData <- .targetsByCid(database, cid)
+        if(multiTarget == "drop"){
+            duplicatedAids <- activityData$aid[duplicated(activityData$aid)]
+            activityData <- activityData[! activityData$aid %in% duplicatedAids,,drop=F]
+        }
+        if(multiTarget == "keepOne"){
+            duplicatedRows <- duplicated(activityData$aid)
+            dropAidTarget <-  paste(activityData$aid[duplicatedRows], activityData$target[duplicatedRows], sep="______") 
+            activityData <- activityData[! duplicatedRows,,drop=F]    
+        }
+        if(! is.logical(category)){
+            categoryTargets <- .targetsByCid(database, cid, category=category)
+            if(multiTarget == "drop"){
+                categoryTargets <- categoryTargets[! categoryTargets$aid %in% duplicatedAids,]
+            }
+            if(multiTarget == "keepOne"){
+                aidTargetByRow <-  paste(categoryTargets$aid, categoryTargets$target, sep="______")   
+                categoryTargets <- categoryTargets[! aidTargetByRow %in% dropAidTarget,,drop=F]
+            }
+            categoryTargets <- categoryTargets[sort(categoryTargets$activity, decreasing=TRUE, index.return=T)$ix,,drop=F]
+            categoryTargets <- categoryTargets[! duplicated(categoryTargets$target),,drop=F]
+            categoryDuplicates <- unique(categoryTargets$target[duplicated(categoryTargets$identifier)])
+            activityData <- activityData[! activityData$target %in% categoryDuplicates,,drop=F]
+        }
+        activeTargetIds <- unique(activityData$target[activityData$activity == 1])
+        
+        if(scoring == "total"){
+            return(length(activeTargetIds))
+        } else {
+            inactiveTargetIds <- unique(activityData$target[activityData$activity == 0])
+            inactiveTargetIds <- inactiveTargetIds[! inactiveTargetIds %in% activeTargetIds]
+            return(length(activeTargetIds)/(length(activeTargetIds)+length(inactiveTargetIds)))
+        }
+    }))  
 }
 
 # takes a minimum number of distinct protein targets
@@ -677,19 +712,37 @@ translateTargetId <- function(database, target, category){
     result[unique(result$source_id),]
 }
 
+.allCategories <- function(database){
+    queryBioassayDB(database, "SELECT DISTINCT category FROM targetTranslations")[[1]]
+}
+
 # Performance: indexes activity_cid, and targets_aid provide ~12x speedup
-.targetsByCid <- function(database, cid, activity = "NOT NULL"){
+.targetsByCid <- function(database, cid, activity = "NOT NULL", category=FALSE){
     if(activity != "NOT NULL"){
         activity <- paste("= '", activity, "'", sep="")
     }
-    queryBioassayDB(database, paste(
-        "SELECT activity.aid, activity.activity, targets.target",
-        " FROM activity",
-        " NATURAL JOIN targets",
-        " WHERE activity.cid = '", cid, "'",
-        " AND activity.activity ", activity,
-        sep = ""
-    ))
+    if(! is.logical(category)){
+        sql <- paste(
+            "SELECT activity.aid, activity.activity, targets.target, targetTranslations.identifier",
+            " FROM activity",
+            " NATURAL JOIN targets",
+            " NATURAL JOIN targetTranslations",
+            " WHERE activity.cid = '", cid, "'",
+            " AND activity.activity ", activity,
+            " AND targetTranslations.category = '", category, "'",
+            sep = ""
+        )
+    } else {
+        sql <- paste(
+            "SELECT activity.aid, activity.activity, targets.target",
+            " FROM activity",
+            " NATURAL JOIN targets",
+            " WHERE activity.cid = '", cid, "'",
+            " AND activity.activity ", activity,
+            sep = ""
+        )
+    }
+    queryBioassayDB(database, sql)
 }
 
 # Performance: indexes targets_target, activity_aid provide MASSIVE speedup
