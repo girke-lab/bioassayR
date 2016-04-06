@@ -36,7 +36,7 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
     con <- dbConnect(drv, dbname=databasePath)
     dbGetQuery(con, paste("CREATE TABLE activity",
         "(aid INTEGER, cid INTEGER,",
-        "activity INTEGER, score INTEGER)"))
+        "activity INTEGER, score REAL)"))
     dbGetQuery(con, paste("CREATE TABLE assays",
         "(source_id INTEGER, aid INTEGER,",
         "assay_type TEXT, organism TEXT, scoring TEXT)"))
