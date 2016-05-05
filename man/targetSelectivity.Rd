@@ -7,7 +7,8 @@ Returns the target selectivity for a specified list of compounds (cids).
 Queries a \code{BioassayDB} database and returns the target selectivity of the specified cids.
 }
 \usage{
-targetSelectivity(database, cids, scoring = "total", category=FALSE, multiTarget="keepOne")
+targetSelectivity(database, cids, scoring = "total", 
+                  category=FALSE, multiTarget="keepOne")
 }
 \arguments{
   \item{database}{
