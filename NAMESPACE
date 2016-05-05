@@ -48,5 +48,7 @@ export(
     "allCids",
     "allTargets",
     "bioactivityFingerprint",
-    "scaleBioassaySet"
+    "scaleBioassaySet",
+    "crossReactivityProbability",
+    "crossReactivityPrior"
 )
