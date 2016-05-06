@@ -22,7 +22,7 @@ trinarySimilarity <- function(queryMatrix, targetMatrix, minSharedScreenedTarget
         intersectSize <- length(intersect(queryActives, targetActives))
         unionSize <- intersectSize + length(intersect(queryActives, targetInactives)) + length(intersect(targetActives, queryInactives))
         sharedScreenedTargets <- length(intersect(c(queryActives, queryInactives), c(targetActives, targetInactives)))
-        if(length(intersectSize < minSharedActiveTargets && sharedScreenedTargets < minSharedScreenedTargets)
+        if(intersectSize < minSharedActiveTargets && sharedScreenedTargets < minSharedScreenedTargets)
             return(NA)
         return(intersectSize / unionSize)
     }, simplify = T)
