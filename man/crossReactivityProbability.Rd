@@ -19,7 +19,7 @@ for a large reference database.
 \usage{
 crossReactivityProbability(inputMatrix, 
                             threshold=0.25,
-                            prior=list(hit_ratio_mean=0.126, hit_ratio_sd=0.1072))
+                            prior=list(hit_ratio_mean=0.0126, hit_ratio_sd=0.0375))
 crossReactivityPrior(database, minTargets=20, category=FALSE)
 }
 \arguments{
@@ -40,7 +40,8 @@ crossReactivityPrior(database, minTargets=20, category=FALSE)
     the mean and standard deviation of hit ratios across a large reference database of
     highly-screened compounds. This can be generated with \code{crossReactivityPrior} and fed
     to \code{crossReactivityProbability}. Computing this for a large database can take a very long
-    time, so reasonable defaults are provided based on Dancik, V. et al. (see references).
+    time, so defaults are provided based on the April 6th 2016 version of the 
+    pre-built protein target only PubChem BioAssay database provided for use with bioassayR.
 }
   \item{database}{
     A \code{BioassayDB} database to query, for calculating a prior probability distribution.
