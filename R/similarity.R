@@ -15,6 +15,7 @@ trinarySimilarity <- function(queryMatrix, targetMatrix, minSharedScreenedTarget
     tMatrix <- as(targetMatrix, "TsparseMatrix")
     
     scores <- tapply(1:length(tMatrix@i), tMatrix@j, function(x){
+        # x <- (1:length(tMatrix@i))[tMatrix@j == 0] # test code
         targetList <- tMatrix@i[x]
         targetScores <- tMatrix@x[x]
         targetActives <- row.names(tMatrix)[targetList[targetScores == 2] + 1]
@@ -23,6 +24,8 @@ trinarySimilarity <- function(queryMatrix, targetMatrix, minSharedScreenedTarget
         unionSize <- intersectSize + length(intersect(queryActives, targetInactives)) + length(intersect(targetActives, queryInactives))
         sharedScreenedTargets <- length(intersect(c(queryActives, queryInactives), c(targetActives, targetInactives)))
         if(intersectSize < minSharedActiveTargets && sharedScreenedTargets < minSharedScreenedTargets)
+            return(NA)
+        if(unionSize == 0)
             return(NA)
         return(intersectSize / unionSize)
     }, simplify = T)
