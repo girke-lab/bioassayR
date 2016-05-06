@@ -6,7 +6,7 @@
 # note that the prior hit_ratio_sd mentioned in the paper is actually the variance
 crossReactivityProbability <- function(inputMatrix, 
                                        threshold=0.25,
-                                       prior=list(hit_ratio_mean=0.126, hit_ratio_sd=0.1072)){
+                                       prior=list(hit_ratio_mean=0.0126, hit_ratio_sd=0.0375)){
     if(class(inputMatrix) != "dgCMatrix")
         stop("'inputMatrix' not of class 'dgCMatrix'")
     if(class(threshold) != "numeric")
