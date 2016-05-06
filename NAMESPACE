@@ -50,5 +50,6 @@ export(
     "bioactivityFingerprint",
     "scaleBioassaySet",
     "crossReactivityProbability",
-    "crossReactivityPrior"
+    "crossReactivityPrior",
+    "trinarySimilarity"
 )
