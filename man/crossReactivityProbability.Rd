@@ -27,6 +27,8 @@ crossReactivityPrior(database, minTargets=20, category=FALSE)
     A \code{dgCMatrix} sparse matrix as computed by the \code{perTargetMatrix} function with the option
     \code{useNumericScores = FALSE}. The cross-reactivity probability will be computed for each compound
     (column) based on the active and inactive scores present.
+    In most cases, the matrix should be generated with \code{getBioassaySetByCids} rather than \code{getAssays},
+    so that it includes all relavent activity data for each compound, rather than a selected set of assays.
 }
   \item{threshold}{
     A \code{numeric} value between 0 and 1 reflecting the desired hit ratio cutoff for computing
@@ -81,8 +83,8 @@ extdata_dir <- system.file("extdata", package="bioassayR")
 sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
 sampleDB <- connectBioassayDB(sampleDatabasePath)
 
-## retrieve three assays
-assays <- getAssays(sampleDB, c("673509","103","105"))
+## retrieve activity data for three compounds
+assays <- getBioassaySetByCids(sampleDB, c("2244","3715","133021"))
 
 ## collapse assays into perTargetMatrix
 targetMatrix <- perTargetMatrix(assays)
