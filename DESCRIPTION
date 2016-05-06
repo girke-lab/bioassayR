@@ -18,4 +18,5 @@ Collate: AllClasses.R AllGenerics.R BioassayDB-accessors.R
         bioassay-accessors.R loadingData.R queries.R
         bioassaySet-accessors.R
         bayesian-cross-reactivity.R
+        similarity.R
 VignetteBuilder: knitr
