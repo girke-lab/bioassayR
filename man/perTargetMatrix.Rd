@@ -60,7 +60,11 @@ extdata_dir <- system.file("extdata", package="bioassayR")
 sampleDatabasePath <- file.path(extdata_dir, "sampleDatabase.sqlite")
 sampleDB <- connectBioassayDB(sampleDatabasePath)
 
-## retrieve three assays
+## option 1: retrieve all data for three compounds
+assays <- getBioassaySetByCids(sampleDB, c("2244","3715","133021"))
+assays
+
+## option 2: retrieve all data for three assays
 assays <- getAssays(sampleDB, c("673509","103","105"))
 assays
 
