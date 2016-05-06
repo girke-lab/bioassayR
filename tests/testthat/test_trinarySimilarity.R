@@ -20,8 +20,8 @@ testMatrix <- sparseMatrix(
 test_that("similarity search result is correct", {
     # 1 = query, 2 = too few shared actives, 3 = enough shared actives, 
     # 4 = too few shared targets, 5 = enough shared targets
-    # 6 = 0.25, 7 = 0.60
-    expected_result <- c(1, NA, 1, NA, 0, 0.25, 0.6)
+    # 6 = 0.25, 7 = 0.50
+    expected_result <- c(1, NA, 1, NA, 0, 0.25, 0.5)
     
     computed_result <- trinarySimilarity(testMatrix[,1,drop=F], testMatrix, minSharedScreenedTargets = 3, minSharedActiveTargets = 2)
     names(expected_result) <- names(computed_result)
