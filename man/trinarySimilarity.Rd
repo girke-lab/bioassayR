@@ -55,6 +55,9 @@ the \code{queryMatrix} and a given row in the \code{targetMatrix} where only the
 set of commonly screened targets is considered. If both the \code{minSharedScreenedTargets}
 and \code{minSharedActiveTargets} thresholds are unsatisfied, an \code{NA} will be returned for the
 given similarity value.
+An \code{NA} will also be returned if the tanimoto coefficient is undefined due
+to a zero in the denominator, which occurs when neither compound was found active
+against any of the commonly screened targets.
 }
 \references{
 Tanimoto similarity coefficient: Tanimoto TT (1957) IBM Internal Report 17th Nov see also Jaccard P (1901) Bulletin del la Societe Vaudoisedes Sciences Naturelles 37, 241-272.
