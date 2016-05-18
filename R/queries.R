@@ -618,10 +618,29 @@ screenedAtLeast <- function(database, minTargets){
 
 # takes a target identifier and category and returns its translation
 # to another target type
-translateTargetId <- function(database, target, category){
+translateTargetId <- function(database, target, category, fromCategory="GI"){
     if(class(database) != "BioassayDB")
         stop("'database' not of class 'BioassayDB'")
-    result <- .translateTargetId(database, target, category)[[1]]
+    allCategories <- c("GI", .allCategories(database))
+    if(! category %in% allCategories)
+        stop(paste(c("'category' must be either an available translation category.
+             valid options: ", allCategories), collapse=" "))
+    if(! fromCategory %in% allCategories)
+        stop(paste(c("'fromCategory' must be either an available translation category.
+             valid options: ", allCategories), collapse=" "))
+    if(length(target) > 1)
+        stop("'target' has length greater than 1, use lapply to run multiple queries")
+    
+    if(fromCategory != "GI")
+        targetGIs <- unique(.reverseTranslateTargetId(database, target, fromCategory))
+    else
+        targetGIs <- target
+
+    if(category == "GI")
+        result <- targetGIs
+    else
+        result <- unique(unlist(lapply(targetGIs, .translateTargetId, database=database, category=category)))
+    
     if(length(result) == 0)
         result <- NA
     return(result)
@@ -655,7 +674,16 @@ translateTargetId <- function(database, target, category){
         " FROM targetTranslations",
         " WHERE target = '", target, "'",
         " AND category = '", category, "'",
-        sep=""))
+        sep=""))[[1]]
+}
+
+.reverseTranslateTargetId <- function(database, identifier, category){
+    queryBioassayDB(database, paste(
+        "SELECT target",
+        " FROM targetTranslations",
+        " WHERE identifier = '", identifier, "'",
+        " AND category = '", category, "'",
+        sep=""))[[1]]
 }
 
 .screenedAtLeast <- function(database, minTargets){
