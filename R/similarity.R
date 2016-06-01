@@ -29,8 +29,10 @@ trinarySimilarity <- function(queryMatrix, targetMatrix, minSharedScreenedTarget
             return(NA)
         return(intersectSize / unionSize)
     }, simplify = T)
-    scoreLabels <- as.numeric(names(scores))
-    scores <- as.numeric(scores)
-    names(scores) <- colnames(targetMatrix)[scoreLabels + 1]
-    return(scores)
+    
+    allScores <- rep(NA, ncol(targetMatrix))
+    names(allScores) <- colnames(targetMatrix)
+    allScores[as.numeric(names(scores)) + 1] <- as.numeric(scores)
+    
+    return(allScores)
 }
