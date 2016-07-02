@@ -12,7 +12,7 @@ Description: Despite a large and rapidly growing body of small molecule bioactiv
 URL: https://github.com/TylerBackman/bioassayR
 BugReports: https://github.com/TylerBackman/bioassayR/issues 
 License: Artistic-2.0
-biocViews: MicrotitrePlateAssay, CellBasedAssays, Visualization, Infrastructure, DataImport, Bioinformatics, Proteomics 
+biocViews: MicrotitrePlateAssay, CellBasedAssays, Visualization, Infrastructure, DataImport, Bioinformatics, Proteomics, Metabolomics 
 LazyLoad: yes 
 Collate: AllClasses.R AllGenerics.R BioassayDB-accessors.R
         bioassay-accessors.R loadingData.R queries.R
