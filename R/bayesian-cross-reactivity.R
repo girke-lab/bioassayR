@@ -37,14 +37,20 @@ crossReactivityProbability <- function(inputMatrix,
 
 # computes a prior for the crossReactivityProbability function
 # by computing the hit ratio distribution for an entire bioassayDB database
-crossReactivityPrior <- function(database, minTargets=20, category=FALSE){
+crossReactivityPrior <- function(database, minTargets=20, category=FALSE, activesOnly=FALSE){
     if(class(database) != "BioassayDB")
         stop("database not of class BioassayDB")
     if(class(minTargets) != "numeric")
         stop("'minTargets' not of class 'numeric'")
+    if(class(activesOnly) != "logical")
+        stop("activesOnly option not of class logical (TRUE or FALSE)")
     
-    highlyScreened <- screenedAtLeast(database, minTargets) 
-    scores <- sapply(highlyScreened, targetSelectivity, database=database, category=category, scoring="fraction")
+    cidList <- screenedAtLeast(database, minTargets) 
+    if(activesOnly){
+        activeCids <- allCids(database, activesOnly = TRUE)
+        cidList <- intersect(cidList, activeCids)
+    }
+    scores <- sapply(cidList, targetSelectivity, database=database, category=category, scoring="fraction")
     scores <- scores[! is.na(scores)]
     list(hit_ratio_mean=mean(scores), hit_ratio_sd=sd(scores))
 }
