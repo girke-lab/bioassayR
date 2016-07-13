@@ -19,7 +19,7 @@ for a reference database.
 crossReactivityProbability(inputMatrix, 
                             threshold=0.25,
                             prior=list(hit_ratio_mean=0.0126, hit_ratio_sd=0.0375))
-crossReactivityPrior(database, minTargets=20, category=FALSE)
+crossReactivityPrior(database, minTargets=20, category=FALSE, activesOnly=FALSE)
 }
 \arguments{
   \item{inputMatrix}{
@@ -60,7 +60,9 @@ with the PubChem BioAssay database one could use "UniProt", "kClust", or "domain
 selectivity by targets with unique UniProt identifiers, distinct amino acid sequences, or Pfam domains
 respectively (the latter is also known as domain selectivity).
 }
-}
+  \item{activesOnly}{
+logical. Should only compounds with at least one active score be used in computing prior? Defaults to FALSE.
+}}
 \value{
 \code{crossReactivityProbability} returns an \code{numeric} vector containing the probability that the hit ratio
 (active targets / total targets) is greater than value \code{threshold} for each
