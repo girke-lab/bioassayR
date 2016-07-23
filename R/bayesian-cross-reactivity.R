@@ -45,7 +45,7 @@ crossReactivityPrior <- function(database, minTargets=20, category=FALSE, active
     if(class(activesOnly) != "logical")
         stop("activesOnly option not of class logical (TRUE or FALSE)")
     
-    cidList <- screenedAtLeast(database, minTargets) 
+    cidList <- screenedAtLeast(database, minTargets, inconclusives=FALSE) 
     if(activesOnly){
         activeCids <- allCids(database, activesOnly = TRUE)
         cidList <- intersect(cidList, activeCids)

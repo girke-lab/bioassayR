@@ -17,7 +17,7 @@ A \code{BioassayDB}, \code{bioassay}, \code{bioassaySet}, or target matrix (\cod
 }
 \value{
 A \code{vector} of distinct target ids. No particular order
-is guranteed.
+is guaranteed.
 }
 \author{
 Tyler Backman
