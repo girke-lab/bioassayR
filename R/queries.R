@@ -607,12 +607,14 @@ targetSelectivity <- function(database, cids, scoring="total", category=FALSE, m
 
 # takes a minimum number of distinct protein targets
 # and returns all CIDs screened against at least that many proteins
-screenedAtLeast <- function(database, minTargets){
+screenedAtLeast <- function(database, minTargets, inconclusives=TRUE){
     if(class(database) != "BioassayDB")
         stop("'database' not of class 'BioassayDB'")
     if(class(minTargets) != "numeric")
         stop("'minTargets' not of class 'numeric'")
-    counts <- .screenedAtLeast(database, minTargets)
+    if(class(inconclusives) != "logical")
+        stop("inconclusives option not of class logical (TRUE or FALSE)")
+    counts <- .screenedAtLeast(database, minTargets, inconclusives)
     return(counts$cid[! is.na(counts$cid)])
 }
 
@@ -686,13 +688,24 @@ translateTargetId <- function(database, target, category, fromCategory="GI"){
         sep=""))[[1]]
 }
 
-.screenedAtLeast <- function(database, minTargets){
-    queryBioassayDB(database, paste(
-        "SELECT cid, COUNT(DISTINCT(target)) AS distinctTargets",
-        " FROM activity",
-        " NATURAL JOIN targets",
-        " GROUP BY cid",
-        " HAVING distinctTargets >= ", minTargets, sep=""))
+.screenedAtLeast <- function(database, minTargets, inconclusives){
+    if(inconclusives){
+        queryString <- paste(
+            "SELECT cid, COUNT(DISTINCT(target)) AS distinctTargets",
+            " FROM activity",
+            " NATURAL JOIN targets",
+            " GROUP BY cid",
+            " HAVING distinctTargets >= ", minTargets, sep="")        
+    } else {
+        queryString <- paste(
+            "SELECT cid, COUNT(DISTINCT(target)) AS distinctTargets",
+            " FROM activity",
+            " NATURAL JOIN targets",
+            " WHERE activity NOT NULL",
+            " GROUP BY cid",
+            " HAVING distinctTargets >= ", minTargets, sep="")
+    }
+    queryBioassayDB(database, queryString)
 }
 
 .targetsByAids  <- function(database, aids){
