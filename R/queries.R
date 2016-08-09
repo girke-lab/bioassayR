@@ -588,9 +588,14 @@ targetSelectivity <- function(database, cids, scoring="total", category=FALSE, m
                 aidTargetByRow <-  paste(categoryTargets$aid, categoryTargets$target, sep="______")   
                 categoryTargets <- categoryTargets[! aidTargetByRow %in% dropAidTarget,,drop=F]
             }
+            # put active scores first in list
             categoryTargets <- categoryTargets[sort(categoryTargets$activity, decreasing=TRUE, index.return=T)$ix,,drop=F]
-            categoryTargets <- categoryTargets[! duplicated(categoryTargets$target),,drop=F]
+            # remove any duplicated target plus identifier rows
+            targetAndIdentifer <- paste(categoryTargets$target, categoryTargets$identifier, sep="______")
+            categoryTargets <- categoryTargets[! duplicated(targetAndIdentifer),,drop=F]
+            # get list of all duplicated identifiers
             categoryDuplicates <- unique(categoryTargets$target[duplicated(categoryTargets$identifier)])
+            # remove duplicated target identifiers from inital activityData table
             activityData <- activityData[! activityData$target %in% categoryDuplicates,,drop=F]
         }
         activeTargetIds <- unique(activityData$target[activityData$activity == 1])
