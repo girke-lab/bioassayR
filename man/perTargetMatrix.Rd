@@ -39,7 +39,10 @@ A \code{bioassaySet} object with data from multiple assays, some of which may sh
   a Z-score compound vs. target matrix.
     \code{NaN} values are replaced with zeros, as these usually represent
     assays summarized with \code{scaleBioassaySet} where all compounds
-    had an identical value.
+    had an identical value. \code{NA} values are excluded, as these usually represent compounds that have no raw activity score.
+    Warning: Be careful using this feature, as it can average/merge together
+    assays scored by incompatible methods. You should confirm that the assays
+    you are summarizing are scored and summarized in a way that makes sense.
   }
 }
 \value{
