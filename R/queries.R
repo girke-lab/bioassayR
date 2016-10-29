@@ -282,6 +282,7 @@ perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targ
         j <- j[sortIndex]
         x <- x[sortIndex]
         coords <- cbind(i+1, j+1, x)
+        coords <- coords[!is.na(coords[,3]),]
     } else {
         # Get coordinates of scores
         # NOTE: inactives must come after active values
