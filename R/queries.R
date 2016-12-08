@@ -631,10 +631,10 @@ translateTargetId <- function(database, target, category, fromCategory="GI"){
         stop("'database' not of class 'BioassayDB'")
     allCategories <- c("GI", .allCategories(database))
     if(! category %in% allCategories)
-        stop(paste(c("'category' must be either an available translation category.
+        stop(paste(c("'category' must be an available translation category.
              valid options: ", allCategories), collapse=" "))
     if(! fromCategory %in% allCategories)
-        stop(paste(c("'fromCategory' must be either an available translation category.
+        stop(paste(c("'fromCategory' must be an available translation category.
              valid options: ", allCategories), collapse=" "))
     if(length(target) > 1)
         stop("'target' has length greater than 1, use lapply to run multiple queries")
