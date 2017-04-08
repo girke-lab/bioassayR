@@ -2,6 +2,7 @@
 import(DBI, RSQLite, methods, Matrix, rjson)
 importFrom("XML", xmlTreeParse, xpathSApply, xmlValue, free)
 importFrom("BiocGenerics", organism, "organism<-")
+importFrom("stats", "pbeta", "sd")
 importClassesFrom("ChemmineR", FPset)
 
 ## EXPORTS
