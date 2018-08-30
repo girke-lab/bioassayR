@@ -81,7 +81,7 @@ The R software for running bioassayR can be downloaded from CRAN (<http://cran.a
 
 ```{r eval=FALSE}
 source("http://bioconductor.org/biocLite.R") # Sources the biocLite.R installation script
-biocLite("bioassayR") # Installs the package
+BiocManager::install("bioassayR") # Installs the package
 ```
 
 Loading the Package and Documentation
