@@ -9,8 +9,8 @@ Depends: R (>= 3.5.0), DBI (>= 0.3.1), RSQLite (>= 1.0.0), methods, Matrix, rjso
 Imports: XML, ChemmineR
 Suggests: BiocStyle, RCurl, biomaRt, cellHTS2, knitr, knitcitations, knitrBootstrap, testthat, ggplot2, rmarkdown
 Description: bioassayR is a computational tool that enables simultaneous analysis of thousands of bioassay experiments performed over a diverse set of compounds and biological targets. Unique features include support for large-scale cross-target analyses of both public and custom bioassays, generation of high throughput screening fingerprints (HTSFPs), and an optional preloaded database that provides access to a substantial portion of publicly available bioactivity data.
-URL: https://github.com/TylerBackman/bioassayR
-BugReports: https://github.com/TylerBackman/bioassayR/issues 
+URL: https://github.com/girke-lab/bioassayR
+BugReports: https://github.com/girke-lab/bioassayR/issues 
 License: Artistic-2.0
 biocViews: ImmunoOncology, MicrotitrePlateAssay, CellBasedAssays, Visualization, Infrastructure, DataImport, Bioinformatics, Proteomics, Metabolomics 
 LazyLoad: yes 
