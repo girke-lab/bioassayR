@@ -18,7 +18,7 @@ activityMatrix <- sparseMatrix(
 sample_bioassaySet <- new("bioassaySet",
                           activity = activityMatrix,
                           scores = activityMatrix,
-                          targets = as(Matrix(sparse=T), "dgCMatrix"),
+                          targets = as(Matrix(nrow = 1, ncol = 2, sparse = TRUE), "dgCMatrix"),
                           sources = data.frame(),
                           source_id = integer(),
                           assay_type = character(),
