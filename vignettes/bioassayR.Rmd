@@ -626,8 +626,7 @@ dat <- data.frame(xvar=plotdata[,1], yvar=plotdata[,2])
 mytheme = theme(plot.margin = unit(c(.2,.2,.2,.2), units = "lines"),
     axis.text = element_blank(),
     axis.ticks = element_blank(),
-    axis.ticks.length = unit(0, "lines"),
-    axis.ticks.margin = unit(0, "lines"))
+    axis.ticks.length = unit(0, "lines"))
 
 # scatterplot of x and y variables
 minR <- min(range(dat$xvar), range(dat$yvar)) - 0.1
