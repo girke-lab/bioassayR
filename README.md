@@ -11,6 +11,7 @@
 
 
 ### Installation 
+
 To install the package, please use the _`BiocManager::install`_ command:
 ```
 if (!requireNamespace("BiocManager", quietly=TRUE))
@@ -25,6 +26,7 @@ if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
 BiocManager::install("girke-lab/bioassayR", build_vignettes=TRUE, dependencies=TRUE)
 ```
+### Pre-built Database 
 
 A pre-built database of public bioactivity data is available here:
 http://chemmine.ucr.edu/bioassayr/
