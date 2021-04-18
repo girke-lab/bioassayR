@@ -9,7 +9,7 @@ This function returns a \code{BioassayDB} object for working with a pre-existing
 Users can download pre-built databases for use with this feature from \url{http://chemmine.ucr.edu/bioassayr}
 }
 \usage{
-connectBioassayDB(databasePath, writeable = F)
+connectBioassayDB(databasePath, writeable = FALSE)
 }
 \arguments{
   \item{databasePath}{
