@@ -1,5 +1,5 @@
 # connects an existing bioassay database
-connectBioassayDB <- function (databasePath, writeable = F) {
+connectBioassayDB <- function (databasePath, writeable = FALSE) {
     if(! file.exists(databasePath)){
         stop("input database does not exist")
     }
@@ -23,7 +23,7 @@ disconnectBioassayDB <- function (database) {
 }
 
 # creates a new bioassay database
-newBioassayDB <- function(databasePath, writeable = T, indexed = F){
+newBioassayDB <- function(databasePath, writeable = TRUE, indexed = FALSE){
     if(file.exists(databasePath)){
         stop("database filename already exists")
     }   
@@ -48,13 +48,13 @@ newBioassayDB <- function(databasePath, writeable = T, indexed = F){
     dbGetQuery(con, paste("CREATE TABLE targetTranslations",
         "(target TEXT, category TEXT, identifier TEXT)"))
     dbDisconnect(con)
-    database <- connectBioassayDB(databasePath, writeable = T)
+    database <- connectBioassayDB(databasePath, writeable = TRUE)
     if(indexed){
         addBioassayIndex(database)
     }
     if(! writeable){
         disconnectBioassayDB(database)
-        database <- connectBioassayDB(databasePath, writeable = F)
+        database <- connectBioassayDB(databasePath, writeable = FALSE)
     }
     return(database)
 }
@@ -75,7 +75,7 @@ addDataSource <- function(database, description, version){
         warning("too many inputs, only the first was kept")
         version <- version[1]
     }
-    if(! grepl("^[a-zA-Z_0-9\\s\\.]+$", version, perl=T))
+    if(! grepl("^[a-zA-Z_0-9\\s\\.]+$", version, perl=TRUE))
         stop("invalid input: must contain only alphanumerics and/or whitespace")
     if(is.numeric(description)){
         description <- as.character(description)
@@ -86,13 +86,14 @@ addDataSource <- function(database, description, version){
         warning("too many inputs, only the first was kept")
         description <- description[1]
     }
-    if(! grepl("^[a-zA-Z_0-9\\s\\.]+$", description, perl=T))
+    if(! grepl("^[a-zA-Z_0-9\\s\\.]+$", description, perl=TRUE))
         stop("invalid input: must contain only alphanumerics and/or whitespace")
 
     con <- slot(database, "database")
     sql <- "INSERT INTO sources VALUES (NULL, $DESCRIPTION, $VERSION)"
     dbBegin(con)
-    dbGetPreparedQuery(con, sql, bind.data = data.frame(DESCRIPTION=description, VERSION=version))
+    #dbGetPreparedQuery(con, sql, bind.data = data.frame(DESCRIPTION=description, VERSION=version))
+    DBI::dbGetQuery(con, sql, params = data.frame(DESCRIPTION=description, VERSION=version))
     dbCommit(con)
     invisible()
 }
@@ -114,7 +115,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         warning("too many inputs, only the first was kept")
         aid <- aid[1]
     }
-    if(! grepl("^[a-zA-Z_0-9\\s]+$", aid, perl=T))
+    if(! grepl("^[a-zA-Z_0-9\\s]+$", aid, perl=TRUE))
         stop("invalid input: must contain only alphanumerics and/or whitespace")
     if((duplicates != "drop") && (! is.logical(duplicates)))
         stop("duplicates option is not one of the allowed values")
@@ -180,7 +181,7 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
         if(sum(tempAssay$cid == "") > 0){
             if(missingCid == "drop"){
                 warning("dropping missing cid(s)")
-                tempAssay <- tempAssay[tempAssay$cid != "",,drop=F]
+                tempAssay <- tempAssay[tempAssay$cid != "",,drop= FALSE]
             } else {
                 stop("missing cid in input csv and drop option not set")
             }
@@ -257,7 +258,7 @@ dropBioassay <- function(database, aid){
         warning("too many inputs, only the first was kept")
         aid <- aid[1]
     }
-    if(! grepl("^[a-zA-Z_0-9\\s]+$", aid, perl=T))
+    if(! grepl("^[a-zA-Z_0-9\\s]+$", aid, perl=TRUE))
         stop("invalid input: must contain only alphanumerics and/or whitespace")
 
     con <- slot(database, "database")

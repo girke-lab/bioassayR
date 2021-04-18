@@ -7,7 +7,7 @@ Create a new bioassayR database
 This function creates a new bioassayR database at the specified filesystem location, and returns a \code{BioassayDB} object connected to the new database.
 }
 \usage{
-newBioassayDB(databasePath, writeable = T, indexed = F)
+newBioassayDB(databasePath, writeable = TRUE, indexed = FALSE)
 }
 \arguments{
   \item{databasePath}{
