@@ -171,7 +171,7 @@ loadBioassay(mydb, tempAssay)
 
 It is recommended to index your database after loading all of your data. This significantly speeds up access to the database, but can also slow down loading of data if indexing is performed before loading.
 
-```{r eval=TRUE, tidy=FALSE}
+```{r eval=TRUE,  warning=FALSE, tidy=FALSE}
 addBioassayIndex(mydb)
 ```
 
