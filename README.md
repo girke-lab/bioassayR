@@ -1,6 +1,6 @@
 # bioassayR 
 
-[![platforms](http://www.bioconductor.org/shields/availability/3.12/bioassayR.svg)](http://www.bioconductor.org/packages/devel/bioc/html/bioassayR.html#archives)
+[![platforms](http://bioconductor.org/shields/availability/release/bioassayR.svg)](http://www.bioconductor.org/packages/devel/bioc/html/bioassayR.html#archives)
 [![rank](http://www.bioconductor.org/shields/downloads/devel/bioassayR.svg)](http://bioconductor.org/packages/stats/bioc/bioassayR/)
 [![posts](http://www.bioconductor.org/shields/posts/bioassayR.svg)](https://support.bioconductor.org/t/bioassayr/)
 [![Bioc](http://www.bioconductor.org/shields/years-in-bioc/bioassayR.svg)](http://www.bioconductor.org/packages/devel/bioc/html/bioassayR.html#since)
