@@ -34,6 +34,7 @@ newBioassayDB <- function(databasePath, writeable = TRUE, indexed = FALSE){
 
     drv <- dbDriver("SQLite")
     con <- dbConnect(drv, dbname=databasePath)
+    suppressWarnings({
     dbGetQuery(con, paste("CREATE TABLE activity",
         "(aid INTEGER, cid INTEGER,",
         "activity INTEGER, score REAL)"))
@@ -47,6 +48,7 @@ newBioassayDB <- function(databasePath, writeable = TRUE, indexed = FALSE){
         "(aid INTEGER, target TEXT, target_type TEXT)"))
     dbGetQuery(con, paste("CREATE TABLE targetTranslations",
         "(target TEXT, category TEXT, identifier TEXT)"))
+    })
     dbDisconnect(con)
     database <- connectBioassayDB(databasePath, writeable = TRUE)
     if(indexed){
@@ -203,11 +205,11 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
     # parse xmlFile
     xmlLines <- readLines(xmlFile)
     xmlLines <- paste(xmlLines, collapse="\n")
-    xmlPointer <- xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
-    suppressWarnings(targets <- xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x"))
-    suppressWarnings(targetTypes <- xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x"))
-    suppressWarnings(type <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]])
-    suppressWarnings(comments <- xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x"))
+    xmlPointer <- XML::xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
+    suppressWarnings(targets <- XML::xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x"))
+    suppressWarnings(targetTypes <- XML::xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x"))
+    suppressWarnings(type <- XML::xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]])
+    suppressWarnings(comments <- XML::xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x"))
     # scoringMethod <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
     free(xmlPointer)
     organism <- comments[grep("^Organism:\\W", comments)]
