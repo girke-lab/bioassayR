@@ -206,18 +206,18 @@ parsePubChemBioassay <- function(aid, csvFile, xmlFile, duplicates = "drop", mis
     xmlLines <- readLines(xmlFile)
     xmlLines <- paste(xmlLines, collapse="\n")
     xmlPointer <- XML::xmlTreeParse(xmlLines, useInternalNodes=TRUE, addFinalizer=TRUE)
-    suppressWarnings(targets <- XML::xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", xmlValue, namespaces="x"))
+    suppressWarnings(targets <- XML::xpathSApply(xmlPointer, "//x:PC-AssayTargetInfo_mol-id/text()", XML::xmlValue, namespaces="x"))
     suppressWarnings(targetTypes <- XML::xpathSApply(xmlPointer,"//x:PC-AssayTargetInfo_molecule-type/@value", namespaces="x"))
     suppressWarnings(type <- XML::xpathSApply(xmlPointer, "//x:PC-AssayDescription_activity-outcome-method/@value", namespaces="x")[[1]])
-    suppressWarnings(comments <- XML::xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", xmlValue, namespaces="x"))
+    suppressWarnings(comments <- XML::xpathSApply(xmlPointer, "//x:PC-AssayDescription_comment_E/text()", XML::xmlValue, namespaces="x"))
     # scoringMethod <- xpathSApply(xmlPointer, "//x:PC-ResultType_name/text()", xmlValue, namespaces="x")[[1]]
-    free(xmlPointer)
+    XML::free(xmlPointer)
     organism <- comments[grep("^Organism:\\W", comments)]
     organism <- gsub("^Organism:\\W(.*)$", "\\1", organism)[1]
     if(is.null(type)){
         type <- NA
     }
-    if(is.null(targets)){
+    if((is.null(targets) | length(targets) == 0)){
         targets <- NA
     }
     if(is.null(targetTypes)){
