@@ -1,7 +1,7 @@
 Package: bioassayR
 Type: Package
 Title: Cross-target analysis of small molecule bioactivity
-Version: 1.34.0
+Version: 1.35.0
 Date: 2021-12-04
 Author: Tyler Backman, Ronly Schlenk, Thomas Girke
 Maintainer: Daniela Cassol <danicassol@gmail.com>
