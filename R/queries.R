@@ -261,7 +261,7 @@ perTargetMatrix <- function(assays, inactives = TRUE, assayTargets = FALSE, targ
         stop("targetOrder not of class character")
     if(is.logical(targetOrder) && isTRUE(targetOrder))
         stop("TRUE is an invalid option for targetOrder- it must be FALSE or character")
-    if(class(summarizeReplicates) != "function" && class(summarizeReplicates) != "standardGeneric")
+    if(class(summarizeReplicates) == "character")
         if(summarizeReplicates != "mode" && summarizeReplicates != "activesFirst")
             stop("invalid conflict resolver option")
     if(class(useNumericScores) != "logical")
